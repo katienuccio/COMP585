@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 public class MainScreen extends AppCompatActivity {
     public void wall() {
-
+        if (1 > 0) {
+            System.out.print("katie");
+        }
     }
 
     @Override
