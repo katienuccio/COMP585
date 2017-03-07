@@ -18,4 +18,6 @@ public class MainScreen extends AppCompatActivity {
 
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
     }
+
+
 }
