@@ -41,6 +41,8 @@ public class MyApplication extends Application {
             @Override
             public void onExitedRegion(Region region) {
                 // could add an "exit" notification too if you want (-:
+                showNotification("WARNING",
+                        "LOL you left good luck getting your flight.");
             }
         });
 
