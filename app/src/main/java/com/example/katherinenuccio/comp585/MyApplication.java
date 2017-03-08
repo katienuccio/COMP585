@@ -33,10 +33,8 @@ public class MyApplication extends Application {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> list) {
                 showNotification(
-                        "Your gate closes in 47 minutes.",
-                        "Current security wait time is 15 minutes, "
-                                + "and it's a 5 minute walk from security to the gate. "
-                                + "Looks like you've got plenty of time!");
+                        "TEST",
+                        "It's working");
             }
             @Override
             public void onExitedRegion(Region region) {
