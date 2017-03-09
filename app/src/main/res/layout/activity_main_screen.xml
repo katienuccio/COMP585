@@ -8,10 +8,53 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/colorPrimary"
     tools:context="com.example.katherinenuccio.comp585.MainScreen">
 
     <TextView
+        android:text="RoomHunt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:id="@+id/main_title"
+        android:layout_marginTop="33dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="@android:style/TextAppearance.Material.Menu" />
+
+    <Button
+        android:text="Helper View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:id="@+id/helper_button"
+        android:layout_below="@+id/play_button"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Current Room : BLANK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:id="@+id/currRoom"
+        android:layout_below="@+id/main_title"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:id="@+id/profile_button"
+        android:layout_below="@+id/helper_button"
+        android:layout_alignLeft="@+id/play_button" />
+
+    <Button
+        android:text="PLAY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="59dp"
+        android:id="@+id/play_button"
+        android:layout_below="@+id/currRoom"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
