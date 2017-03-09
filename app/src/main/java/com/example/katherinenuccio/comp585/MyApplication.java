@@ -10,6 +10,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
@@ -28,6 +29,7 @@ public class MyApplication extends Application {
         super.onCreate();
 
         beaconManager = new BeaconManager(getApplicationContext());
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.ocean);
 
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             @Override
@@ -35,10 +37,12 @@ public class MyApplication extends Application {
                 showNotification(
                         "TEST",
                         "It's working");
+                mp.start();
             }
             @Override
             public void onExitedRegion(Region region) {
                 // could add an "exit" notification too if you want (-:
+                mp.stop();
             }
         });
 
@@ -47,8 +51,7 @@ public class MyApplication extends Application {
             public void onServiceReady() {
                 beaconManager.startMonitoring(new Region(
                         "monitored region",
-                        UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),20816
-                        ,33206));
+                        UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),57216, 11333));
             }
         });
     }
