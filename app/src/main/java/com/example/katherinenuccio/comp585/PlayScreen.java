@@ -112,7 +112,7 @@ public class PlayScreen extends AppCompatActivity {
                             break;
                     }
                     if (roomSound != null){
-                        if (currSound.equals(newSound)) {
+                        if (!currSound.equals(newSound)) {
                             currSound = newSound;
                             roomSound.release();
                             roomSound = null;
