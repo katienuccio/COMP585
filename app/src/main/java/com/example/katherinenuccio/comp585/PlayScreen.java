@@ -1,5 +1,6 @@
 package com.example.katherinenuccio.comp585;
 
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -49,14 +51,31 @@ public class PlayScreen extends AppCompatActivity {
     private BeaconManager beaconManager;
     private Region region;
     private MediaPlayer roomSound;
-    private String currSound = "beach";
+    private String currSound = "";
     private String newSound;
+    private TextToSpeech t1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_screen);
         beaconManager = new BeaconManager(this);
+        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.UK);
+                    t1.speak("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.", TextToSpeech.QUEUE_FLUSH, null);
+                }
+            }
+        });
+
+
+
+
+
+
+
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
@@ -111,14 +130,18 @@ public class PlayScreen extends AppCompatActivity {
                             newSound = "mountain";
                             break;
                     }
-                    if (roomSound != null){
-                        if (currSound.equals(newSound)) {
-                            currSound = newSound;
-                            roomSound.release();
-                            roomSound = null;
-                        }
-                    };
-                    newText.setText("Nearest Beacon is " + places);//+ nearestBeacon.getMajor() + " " + nearestBeacon.getMinor());
+                    pauseMediaPlayer();
+                    newText.setText("Nearest Beacon is " + places);
+//                    if (roomSound != null){
+//                        if (currSound.equals(newSound)) {
+//                            currSound = newSound;
+//                            roomSound.stop();
+//                            roomSound.reset();
+//                            roomSound.release();
+//                            roomSound = null;
+//                        }
+//                    };
+                    //+ nearestBeacon.getMajor() + " " + nearestBeacon.getMinor());
                    // Log.d("Beacon", "Nearest = " + places);
                 }
             }
@@ -126,6 +149,18 @@ public class PlayScreen extends AppCompatActivity {
         region = new Region("ranged region",
                 UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),null,null);
 
+    }
+
+    protected void pauseMediaPlayer() {
+        if (roomSound != null){
+            if (!currSound.equals(newSound)) {
+                currSound = newSound;
+                roomSound.stop();
+                roomSound.reset();
+                roomSound.release();
+                roomSound = null;
+            }
+        };
     }
 
     @Override
@@ -143,8 +178,10 @@ public class PlayScreen extends AppCompatActivity {
     @Override
     protected void onPause() {
         beaconManager.stopRanging(region);
-
+        if(t1 !=null){
+            t1.stop();
+            t1.shutdown();
+        }
         super.onPause();
     }
-
 }
