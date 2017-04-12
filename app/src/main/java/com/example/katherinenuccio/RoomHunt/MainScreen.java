@@ -1,4 +1,4 @@
-package com.example.katherinenuccio.comp585;
+package com.example.katherinenuccio.RoomHunt;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,17 +9,17 @@ import android.widget.TextView;
 
 import com.estimote.sdk.SystemRequirementsChecker;
 
+import java.util.HashMap;
+
 public class MainScreen extends AppCompatActivity implements View.OnClickListener{
 
     private Button play;
     private Button helper;
     private Button profile;
 
+    private HashMap<String, Boolean> flags;
     private TextView title;
     private TextView currRoom;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,23 +28,15 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
 
         play = (Button) findViewById(R.id.play_button);
         play.setOnClickListener(this);
-        helper = (Button) findViewById(R.id.helper_button);
-        helper.setOnClickListener(this);
-        profile = (Button) findViewById(R.id.profile_button);
-        profile.setOnClickListener(this);
 
+        flags = new HashMap<String, Boolean>();
         title = (TextView) findViewById(R.id.main_title);
         currRoom = (TextView) findViewById(R.id.currRoom);
-
-
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
     }
 
@@ -53,12 +45,7 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
     public void onClick(View view) {
         if (view == play) {
             Intent i = new Intent(this, PlayScreen.class);
-            startActivity(i);
-        }else if (view == helper){
-            Intent i = new Intent(this, HelperScreen.class);
-            startActivity(i);
-        }else if (view == profile){
-            Intent i = new Intent(this, ProfileScreen.class);
+            i.putExtra("flags", flags);
             startActivity(i);
         }
     }
