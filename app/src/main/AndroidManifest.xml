@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.katherinenuccio.comp585">
+    package="com.example.katherinenuccio.RoomHunt">
 
     <application
         android:name=".MyApplication"
@@ -16,29 +16,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PlayScreen"
-            android:parentActivityName=".MainScreen" >
-        <!-- The meta-data tag is required if you support API level 15 and lower -->
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainScreen" />
-        />
-        </activity>
-        <activity android:name=".HelperScreen"
-            android:parentActivityName=".MainScreen" >
-        <!-- The meta-data tag is required if you support API level 15 and lower -->
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainScreen" />
-        />
-        </activity>
-        <activity android:name=".ProfileScreen"
-            android:parentActivityName=".MainScreen" >
+        <activity
+            android:name=".PlayScreen"
+            android:parentActivityName=".MainScreen">
+
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainScreen" />
+                android:value="com.example.katherinenuccio.RoomHunt.MainScreen" />
+            />
         </activity>
+        <activity android:name=".ForestScreen"></activity>
     </application>
 
 </manifest>
