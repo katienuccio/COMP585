@@ -3,6 +3,7 @@ package com.example.katherinenuccio.RoomHunt;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -31,6 +32,7 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
             Intent i = new Intent(this, PlayScreen.class);
             i.putExtra("flags", flags);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Log.d("Flags During", flags.toString());
             startActivity(i);
         }
     }

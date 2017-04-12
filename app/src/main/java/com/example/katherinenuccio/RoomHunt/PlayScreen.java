@@ -88,21 +88,22 @@ public class PlayScreen extends AppCompatActivity {
                 HashMap<String, Boolean> newFlags = (HashMap<String, Boolean>) intent.getSerializableExtra("flags");
                 if (!newFlags.isEmpty()) {
                     flags = newFlags;
+                    Log.d("Flags After", flags.toString());
                 }
             }
             catch (Exception ex){
             }
         }
-        if(flags.get("exploreMode")) {
-            t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-                @Override
-                public void onInit(int status) {
-                    if (status != TextToSpeech.ERROR) {
-                        t1.setLanguage(Locale.UK);
-                        t1.speak("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.", TextToSpeech.QUEUE_FLUSH, null);
-                    }
+        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.UK);
                 }
-            });
+            }
+        });
+        if(flags.get("exploreMode")) {
+            t1.speak("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.", TextToSpeech.QUEUE_FLUSH, null);
         }
 
         // Main game code.
@@ -150,6 +151,7 @@ public class PlayScreen extends AppCompatActivity {
                                     // Switch to the forest minigame
                                     Intent forestIntent = new Intent(PlayScreen.this, ForestScreen.class);
                                     forestIntent.putExtra("flags", flags);
+                                    Log.d("Flags Before", flags.toString());
                                     startActivity(forestIntent);
 
                                 }
@@ -186,7 +188,7 @@ public class PlayScreen extends AppCompatActivity {
                                 }
                                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                                     // Dialogue to tell player congratulations
-                                    t1.speak("You... you did it! I don't know how we can ever repay you.", TextToSpeech.QUEUE_FLUSH, null);
+                                    t1.speak("You did it! I don't know how we can ever repay you.", TextToSpeech.QUEUE_FLUSH, null);
 
                                     flags.put("gameDone", true);
                                 }

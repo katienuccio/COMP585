@@ -11,7 +11,7 @@ import com.estimote.sdk.SystemRequirementsChecker;
 
 import java.util.HashMap;
 
-public class MainScreen extends AppCompatActivity implements View.OnClickListener{
+public class MenuScreen extends AppCompatActivity implements View.OnClickListener{
 
     private Button play;
     private Button helper;
@@ -24,7 +24,7 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_screen);
+        setContentView(R.layout.activity_menu_screen);
 
         play = (Button) findViewById(R.id.play_button);
         play.setOnClickListener(this);
