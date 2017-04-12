@@ -19,8 +19,8 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forest_screen);
         Intent intent = getIntent();
-//        flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
-
+        flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
+        flags.put("appleDone", true);
         forestbutt = (Button) findViewById(R.id.forestbutt);
         forestbutt.setOnClickListener(this);
     }
@@ -29,7 +29,7 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if (view == forestbutt) {
             Intent i = new Intent(this, PlayScreen.class);
-//            i.putExtra("flags", flags);
+            i.putExtra("flags", flags);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
         }

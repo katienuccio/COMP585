@@ -9,12 +9,15 @@ import android.widget.TextView;
 
 import com.estimote.sdk.SystemRequirementsChecker;
 
+import java.util.HashMap;
+
 public class MainScreen extends AppCompatActivity implements View.OnClickListener{
 
     private Button play;
     private Button helper;
     private Button profile;
 
+    private HashMap<String, Boolean> flags;
     private TextView title;
     private TextView currRoom;
 
@@ -26,6 +29,7 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
         play = (Button) findViewById(R.id.play_button);
         play.setOnClickListener(this);
 
+        flags = new HashMap<String, Boolean>();
         title = (TextView) findViewById(R.id.main_title);
         currRoom = (TextView) findViewById(R.id.currRoom);
     }
@@ -41,6 +45,7 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
     public void onClick(View view) {
         if (view == play) {
             Intent i = new Intent(this, PlayScreen.class);
+            i.putExtra("flags", flags);
             startActivity(i);
         }
     }
