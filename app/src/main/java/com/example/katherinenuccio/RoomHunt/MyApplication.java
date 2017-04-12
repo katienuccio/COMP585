@@ -1,4 +1,4 @@
-package com.example.katherinenuccio.comp585;
+package com.example.katherinenuccio.RoomHunt;
 
 /**
  * Created by katherinenuccio on 3/1/17.
@@ -11,13 +11,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
-import com.estimote.sdk.Region;
-import com.estimote.sdk.connection.internal.protocols.Operation;
-
-import java.util.List;
-import java.util.UUID;
 
 public class MyApplication extends Application {
 
@@ -27,32 +21,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        beaconManager = new BeaconManager(getApplicationContext());
 
-        beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
-            @Override
-            public void onEnteredRegion(Region region, List<Beacon> list) {
-                showNotification(
-                        "TEST",
-                        "It's working");
-            }
-            @Override
-            public void onExitedRegion(Region region) {
-                // could add an "exit" notification too if you want (-:
-                showNotification("WARNING",
-                        "LOL you left good luck getting your flight.");
-            }
-        });
-
-        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-            @Override
-            public void onServiceReady() {
-                beaconManager.startMonitoring(new Region(
-                        "monitored region",
-                        UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"),20816
-                        ,33206));
-            }
-        });
     }
 
     public void showNotification(String title, String message) {
