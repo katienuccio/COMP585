@@ -8,8 +8,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainScreen">
+        android:theme="@style/AppTheme"
+        >
+        <activity android:name=".MainScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +20,8 @@
         </activity>
         <activity
             android:name=".PlayScreen"
-            android:parentActivityName=".MainScreen">
+            android:parentActivityName=".MainScreen"
+            android:screenOrientation="portrait">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
@@ -26,7 +29,8 @@
                 android:value="com.example.katherinenuccio.RoomHunt.MainScreen" />
             />
         </activity>
-        <activity android:name=".ForestScreen"></activity>
+        <activity android:name=".ForestScreen"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
