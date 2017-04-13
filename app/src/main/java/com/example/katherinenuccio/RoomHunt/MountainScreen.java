@@ -21,12 +21,14 @@ public class MountainScreen extends AppCompatActivity implements View.OnClickLis
     private Button mountainbutt;
     private HashMap<String, Boolean> flags;
     private TextView resultTEXT;
+    private TextView newText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mountain_screen);
         resultTEXT = (TextView) findViewById(R.id.TVresult);
+        newText = (TextView) findViewById(R.id.result);
         Intent intent = getIntent();
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         flags.put("dragonDone", true);
@@ -36,7 +38,6 @@ public class MountainScreen extends AppCompatActivity implements View.OnClickLis
 
     public void onButtonClick(View v) {
         if (v.getId() == R.id.imageButton) {
-
             promptSpeechInput();
         }
     }
@@ -59,7 +60,13 @@ public class MountainScreen extends AppCompatActivity implements View.OnClickLis
         switch (request_code) {
             case 100: if (result_code == RESULT_OK && i != null) {
                 ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                resultTEXT.setText(result.get(0));
+                resultTEXT.setText("You said: " + result.get(0));
+                if (result.get(0).toLowerCase().equals("i have the power")){
+                    beatBoss();
+                }
+                else {
+                    newText.setText("Sorry, that's not the right phrase");
+                }
             }
                 break;
         }
@@ -68,11 +75,15 @@ public class MountainScreen extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         if (view == mountainbutt) {
-            Intent i = new Intent(this, PlayScreen.class);
-            i.putExtra("flags", flags);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            Log.d("Flags During Mountain", flags.toString());
-            startActivity(i);
+            beatBoss();
         }
+    }
+
+    public void beatBoss() {
+        Intent i = new Intent(this, PlayScreen.class);
+        i.putExtra("flags", flags);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Log.d("Flags During Mountain", flags.toString());
+        startActivity(i);
     }
 }
