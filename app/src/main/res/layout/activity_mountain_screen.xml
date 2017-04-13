@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.katherinenuccio.RoomHunt.ForestScreen">
+    tools:context="com.example.katherinenuccio.RoomHunt.MountainScreen">
 
     <Button
-        android:id="@+id/forestbutt"
+        android:id="@+id/mountainbutt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WAKE ME UP"
+        android:text="BRING ME TO LIFE"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"

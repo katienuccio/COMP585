@@ -31,6 +31,10 @@
         </activity>
         <activity android:name=".ForestScreen"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".BeachScreen"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".MountainScreen"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
