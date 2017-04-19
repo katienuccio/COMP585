@@ -10,7 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2fd2566-d912-4f14-99f0-32f0db1d428f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/ShakeDetector.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" />
@@ -20,7 +19,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/tasks/_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/BeachScreen.java" afterPath="$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/BeachScreen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/res/layout/activity_beach_screen.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_beach_screen.xml" />
     </list>
     <ignored path="app.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -53,11 +51,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PlayScreen.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PlayScreen.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/PlayScreen.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="103" column="16" selection-start-line="103" selection-start-column="16" selection-end-line="103" selection-end-column="16" />
+            <state relative-caret-position="161">
+              <caret line="261" column="4" selection-start-line="261" selection-start-column="4" selection-end-line="268" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BeachScreen.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/BeachScreen.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="83" column="49" selection-start-line="83" selection-start-column="49" selection-end-line="83" selection-end-column="49" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -1115,8 +1125,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/MountainScreen.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/PlayScreen.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_beach_screen.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/BeachScreen.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/ShakeDetector.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/BeachScreen.java" />
       </list>
     </option>
   </component>
@@ -1670,7 +1680,14 @@
       <option name="project" value="LOCAL" />
       <updated>1492102412849</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Beach game is working!">
+      <created>1492634348897</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1492634348897</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -1762,7 +1779,8 @@
     <MESSAGE value="Added every room. Added TTS method for ease-of-use and compatibility." />
     <MESSAGE value="Incorporated Katie's Voice to Text code. Hopefully it works, haven't tested.&#10;" />
     <MESSAGE value="Made Mountain game work. Saying &quot;I have the power&quot; wins it." />
-    <option name="LAST_COMMIT_MESSAGE" value="Made Mountain game work. Saying &quot;I have the power&quot; wins it." />
+    <MESSAGE value="Beach game is working!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Beach game is working!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -2150,22 +2168,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/BeachScreen.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/PlayScreen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="91" column="0" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+        <state relative-caret-position="161">
+          <caret line="261" column="4" selection-start-line="261" selection-start-column="4" selection-end-line="268" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1657#2038#0" expanded="true" />
-            <element signature="e#2037#2038#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/PlayScreen.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/katherinenuccio/RoomHunt/BeachScreen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="103" column="16" selection-start-line="103" selection-start-column="16" selection-end-line="103" selection-end-column="16" />
+        <state relative-caret-position="90">
+          <caret line="83" column="49" selection-start-line="83" selection-start-column="49" selection-end-line="83" selection-end-column="49" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
