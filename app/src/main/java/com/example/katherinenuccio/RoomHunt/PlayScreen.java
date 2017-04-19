@@ -93,8 +93,14 @@ public class PlayScreen extends AppCompatActivity {
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
+                Log.d("Test", "Init");
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
+                    Log.e("TTS", "Initialization Succeeded");
+                    if(flags.get("exploreMode")) {
+                        Log.d("Test", "here");
+                        speak("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.");
+                    }
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }
@@ -103,11 +109,9 @@ public class PlayScreen extends AppCompatActivity {
                 }
             }
         });
+
         Log.d("Flags Begin", flags.toString());
-        if(flags.get("exploreMode")) {
-            Log.d("Test", "here");
-            speak("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.");
-        }
+
 
         // Main game code.
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
