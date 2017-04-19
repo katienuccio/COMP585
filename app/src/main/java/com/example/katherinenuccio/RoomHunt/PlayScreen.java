@@ -198,6 +198,11 @@ public class PlayScreen extends AppCompatActivity {
                                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                                     // Dialogue to tell player congratulations
                                     speak("You did it! I don't know how we can ever repay you.");
+                                    int count = 0;
+                                    while(count < 5) {
+                                        speak("Love me");
+                                        count++;
+                                    }
 
                                     flags.put("gameDone", true);
                                 }
@@ -256,7 +261,7 @@ public class PlayScreen extends AppCompatActivity {
                 roomSound.release();
                 roomSound = null;
             }
-        };
+        }
     }
 
     // Text to speech code. For deprecation/compatibility purposes.
