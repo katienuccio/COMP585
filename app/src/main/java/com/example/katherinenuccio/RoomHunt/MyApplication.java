@@ -1,4 +1,4 @@
-package com.example.katherinenuccio.comp585;
+package com.example.katherinenuccio.RoomHunt;
 
 /**
  * Created by katherinenuccio on 3/1/17.
@@ -10,18 +10,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.widget.TextView;
-import android.view.View;
-import android.widget.EditText;
 
-import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
-import com.estimote.sdk.Region;
-import com.estimote.sdk.connection.internal.protocols.Operation;
-
-import java.util.List;
-import java.util.UUID;
 
 public class MyApplication extends Application {
 

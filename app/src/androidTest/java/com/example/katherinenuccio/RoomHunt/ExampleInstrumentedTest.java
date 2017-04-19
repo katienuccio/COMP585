@@ -1,4 +1,4 @@
-package com.example.katherinenuccio.comp585;
+package com.example.katherinenuccio.RoomHunt;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
