@@ -25,7 +25,7 @@ public class MyApplication extends Application {
     }
 
     public void showNotification(String title, String message) {
-        Intent notifyIntent = new Intent(this, MainScreen.class);
+        Intent notifyIntent = new Intent(this, MenuScreen.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivities(this, 0,
                 new Intent[] { notifyIntent }, PendingIntent.FLAG_UPDATE_CURRENT);

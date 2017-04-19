@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
-        <activity android:name=".MainScreen"
+        <activity android:name=".MenuScreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,16 +20,20 @@
         </activity>
         <activity
             android:name=".PlayScreen"
-            android:parentActivityName=".MainScreen"
+            android:parentActivityName=".MenuScreen"
             android:screenOrientation="portrait">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.katherinenuccio.RoomHunt.MainScreen" />
+                android:value="com.example.katherinenuccio.RoomHunt.MenuScreen" />
             />
         </activity>
         <activity android:name=".ForestScreen"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".BeachScreen"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".MountainScreen"
             android:screenOrientation="portrait"></activity>
     </application>
 

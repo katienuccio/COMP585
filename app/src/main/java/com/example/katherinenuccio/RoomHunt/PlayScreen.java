@@ -1,13 +1,11 @@
 package com.example.katherinenuccio.RoomHunt;
 
+import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import android.app.Application;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.widget.TextView;
@@ -16,8 +14,6 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +52,7 @@ public class PlayScreen extends AppCompatActivity {
     private MediaPlayer roomSound;
     private String currSound = "beach";
     private String newSound;
-    private TextToSpeech t1;
+    private TextToSpeech tts;
 
     // Logic to flag game progression properly
     // This helps us not repeat mini-games or give a player the same quest over and over
@@ -88,21 +84,29 @@ public class PlayScreen extends AppCompatActivity {
                 HashMap<String, Boolean> newFlags = (HashMap<String, Boolean>) intent.getSerializableExtra("flags");
                 if (!newFlags.isEmpty()) {
                     flags = newFlags;
+                    Log.d("Flags After Intents", flags.toString());
                 }
             }
             catch (Exception ex){
             }
         }
-        if(flags.get("exploreMode")) {
-            t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-                @Override
-                public void onInit(int status) {
-                    if (status != TextToSpeech.ERROR) {
-                        t1.setLanguage(Locale.UK);
-                        t1.speak("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.", TextToSpeech.QUEUE_FLUSH, null);
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "This Language Is Not Supported");
                     }
+                } else {
+                    Log.e("TTS", "Initialization Failed");
                 }
-            });
+            }
+        });
+        Log.d("Flags Begin", flags.toString());
+        if(flags.get("exploreMode")) {
+            Log.d("Test", "here");
+            speak("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.");
         }
 
         // Main game code.
@@ -128,8 +132,10 @@ public class PlayScreen extends AppCompatActivity {
                             if (!flags.get("exploreMode")) {
                                 if (flags.get("duneDigging") && !flags.get("swordDone")) {
                                     // Switch to beach minigame
-
-                                    flags.put("swordDone", true);
+                                    Intent beachIntent = new Intent(PlayScreen.this, BeachScreen.class);
+                                    beachIntent.putExtra("flags", flags);
+                                    Log.d("Flags Before Beach", flags.toString());
+                                    startActivity(beachIntent);
                                 }
                             }
                             pauseMediaPlayer();
@@ -150,6 +156,7 @@ public class PlayScreen extends AppCompatActivity {
                                     // Switch to the forest minigame
                                     Intent forestIntent = new Intent(PlayScreen.this, ForestScreen.class);
                                     forestIntent.putExtra("flags", flags);
+                                    Log.d("Flags Before Forest", flags.toString());
                                     startActivity(forestIntent);
 
                                 }
@@ -171,22 +178,22 @@ public class PlayScreen extends AppCompatActivity {
                                 // Switch to the town dialogues
                                 if (!flags.get("applePicking")){
                                     // Dialogue to tell player to go pick apples
-                                    t1.speak("Greetings explorer! Would you mind going to the forest and picking some apples for us? We're running out of food!", TextToSpeech.QUEUE_FLUSH, null);
+                                    speak("Greetings explorer! Would you mind going to the forest and picking some apples for us? We're running out of food!");
                                     flags.put("applePicking", true);
                                 }
                                 else if (flags.get("appleDone") && !flags.get("duneDigging")){
                                     // Dialogue to tell player to go get sword at beach
-                                    t1.speak("Welcome back! Thanks for getting some apples, you should go to the beach and find the sword of legends!", TextToSpeech.QUEUE_FLUSH, null);
+                                    speak("Welcome back! Thanks for getting some apples, you should go to the beach and find the sword of legends!");
                                     flags.put("duneDigging", true);
                                 }
                                 else if (flags.get("swordDone") && !flags.get("bossBeating")){
                                     // Dialogue to tell player to go fight dragon
-                                    t1.speak("Wow, you got the sword! You really are the hero of legends! Quickly, go to the mountain and slay the dragon!", TextToSpeech.QUEUE_FLUSH, null);
+                                    speak("Wow, you got the sword! You really are the hero of legends! Quickly, go to the mountain and slay the dragon!");
                                     flags.put("bossBeating", true);
                                 }
                                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                                     // Dialogue to tell player congratulations
-                                    t1.speak("You... you did it! I don't know how we can ever repay you.", TextToSpeech.QUEUE_FLUSH, null);
+                                    speak("You did it! I don't know how we can ever repay you.");
 
                                     flags.put("gameDone", true);
                                 }
@@ -205,10 +212,12 @@ public class PlayScreen extends AppCompatActivity {
                             }
                             newSound = "mountain";
                             if (!flags.get("exploreMode")) {
-                                if (flags.get("bossBeating")) {
+                                if (flags.get("bossBeating") && !flags.get("dragonDone")) {
                                     // Switch to dragon minigame
-
-                                    flags.put("dragonDone", true);
+                                    Intent mountainIntent = new Intent(PlayScreen.this, MountainScreen.class);
+                                    mountainIntent.putExtra("flags", flags);
+                                    Log.d("Flags Before Mountain", flags.toString());
+                                    startActivity(mountainIntent);
                                 }
                             }
                             pauseMediaPlayer();
@@ -246,6 +255,14 @@ public class PlayScreen extends AppCompatActivity {
         };
     }
 
+    // Text to speech code. For deprecation/compatibility purposes.
+    private void speak(String text) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        } else {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
     @Override
     protected void onResume() {
         super.onResume();
