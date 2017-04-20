@@ -31,4 +31,13 @@
         android:layout_below="@+id/main_title"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:id="@+id/games_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="73dp"
+        android:text="GAMES"
+        android:layout_below="@+id/play_button"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

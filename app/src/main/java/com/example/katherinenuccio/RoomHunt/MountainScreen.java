@@ -29,7 +29,6 @@ public class MountainScreen extends Activity implements RecognitionListener {
     private Intent recognizerIntent;
     private String LOG_TAG = "VoiceRecognition";
     private String mResult;
-    private Button mountainbutt;
     private HashMap<String, Boolean> flags;
     private TextView resultTEXT;
     private TextView newText;
@@ -137,12 +136,14 @@ public class MountainScreen extends Activity implements RecognitionListener {
 
     @Override
     public void onError(int errorCode) {
-        returnedText.setText(mResult);
-        if (mResult.toLowerCase().equals("i have the power")){
-            beatBoss();
-        }
-        else {
-            returnedText.setText("Sorry, that's not the right phrase");
+        if (mResult != null) {
+            Log.d("VOICE", mResult);
+            returnedText.setText(mResult);
+            if (mResult.toLowerCase().equals("i have the power")) {
+                beatBoss();
+            } else {
+                returnedText.setText("Sorry, that's not the right phrase");
+            }
         }
 //        toggleButton.setChecked(false);
 
@@ -172,19 +173,21 @@ public class MountainScreen extends Activity implements RecognitionListener {
 
     @Override
     public void onResults(Bundle results) {
-        Log.i(LOG_TAG, "onResults");
-        ArrayList<String> matches = results
-                .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        String text = "";
-        for (String result : matches)
-            text += result + "\n";
+        if (results != null) {
+            Log.i(LOG_TAG, "onResults");
+            Log.d("VOICE", results.toString());
+            ArrayList<String> matches = results
+                    .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            String text = "";
+            for (String result : matches)
+                text += result + "\n";
 
-        returnedText.setText(text);
-        if (text.toLowerCase().equals("i have the power")){
-            beatBoss();
-        }
-        else {
-            returnedText.setText("Sorry, that's not the right phrase");
+            returnedText.setText(text);
+            if (text.toLowerCase().equals("i have the power")) {
+                beatBoss();
+            } else {
+                returnedText.setText("Sorry, that's not the right phrase");
+            }
         }
     }
 

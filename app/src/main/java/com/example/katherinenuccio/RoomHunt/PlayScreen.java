@@ -8,6 +8,8 @@ import android.util.Log;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.estimote.sdk.Beacon;
@@ -22,7 +24,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayScreen extends AppCompatActivity {
+// Add cheats
+public class PlayScreen extends AppCompatActivity implements View.OnClickListener {
 
     private static final Map<String, String> PLACES_BY_BEACONS;
 
@@ -45,6 +48,9 @@ public class PlayScreen extends AppCompatActivity {
         return "";
     }
 
+    // Cheat Buttons
+    private Button beachButton, mountainButton, forestButton, townButton;
+
     // Variables to make beacons work
     private BeaconManager beaconManager;
     private Region region;
@@ -66,19 +72,18 @@ public class PlayScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_screen);
         beaconManager = new BeaconManager(this);
+
+        beachButton = (Button) findViewById(R.id.beach_button);
+        beachButton.setOnClickListener(this);
+        forestButton = (Button) findViewById(R.id.forest_button);
+        forestButton.setOnClickListener(this);
+        mountainButton = (Button) findViewById(R.id.mountain_button);
+        mountainButton.setOnClickListener(this);
+        townButton = (Button) findViewById(R.id.town_button);
+        townButton.setOnClickListener(this);
+
         flags = new HashMap<String, Boolean>();
-        flags.put("visitBeach", false);
-        flags.put("visitForest", false);
-        flags.put("visitMountain", false);
-        flags.put("visitTown", false);
-        flags.put("exploreMode", true);
-        flags.put("applePicking", false);
-        flags.put("duneDigging", false);
-        flags.put("bossBeating", false);
-        flags.put("appleDone", false);
-        flags.put("swordDone", false);
-        flags.put("dragonDone", false);
-        flags.put("gameDone", false);
+
         Intent intent = getIntent();
         if (intent != null){
             try{
@@ -135,7 +140,7 @@ public class PlayScreen extends AppCompatActivity {
                             }
                             newSound = "beach";
                             if (!flags.get("exploreMode")) {
-                                if (flags.get("duneDigging") && !flags.get("swordDone")) {
+                                if ((flags.get("duneDigging") && !flags.get("swordDone")) || flags.get("cheats")) {
                                     // Switch to beach minigame
                                     Intent beachIntent = new Intent(PlayScreen.this, BeachScreen.class);
                                     beachIntent.putExtra("flags", flags);
@@ -157,7 +162,7 @@ public class PlayScreen extends AppCompatActivity {
                             }
                             newSound = "forest";
                             if (!flags.get("exploreMode")) {
-                                if (flags.get("applePicking") && !flags.get("appleDone")){
+                                if ((flags.get("applePicking") && !flags.get("appleDone")) || flags.get("cheats")){
                                     // Switch to the forest minigame
                                     Intent forestIntent = new Intent(PlayScreen.this, ForestScreen.class);
                                     forestIntent.putExtra("flags", flags);
@@ -222,7 +227,7 @@ public class PlayScreen extends AppCompatActivity {
                             }
                             newSound = "mountain";
                             if (!flags.get("exploreMode")) {
-                                if (flags.get("bossBeating") && !flags.get("dragonDone")) {
+                                if ((flags.get("bossBeating") && !flags.get("dragonDone")) || flags.get("cheats")) {
                                     // Switch to dragon minigame
                                     Intent mountainIntent = new Intent(PlayScreen.this, MountainScreen.class);
                                     mountainIntent.putExtra("flags", flags);
@@ -292,6 +297,125 @@ public class PlayScreen extends AppCompatActivity {
         beaconManager.stopRanging(region);
 
         super.onPause();
+    }
+
+    public void onClick(View view) {
+        if (view == beachButton) {
+            if (roomSound == null) {
+                roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.ocean);
+                roomSound.setLooping(true);
+                roomSound.start();
+            } else if (!roomSound.isPlaying()) {
+                roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.ocean);
+                roomSound.start();
+            }
+            newSound = "beach";
+            if (!flags.get("exploreMode")) {
+                if ((flags.get("duneDigging") && !flags.get("swordDone")) || flags.get("cheats")) {
+                    // Switch to beach minigame
+                    Intent beachIntent = new Intent(PlayScreen.this, BeachScreen.class);
+                    beachIntent.putExtra("flags", flags);
+                    Log.d("Flags Before Beach", flags.toString());
+                    startActivity(beachIntent);
+                }
+            }
+            pauseMediaPlayer();
+            flags.put("visitBeach", true);
+        } else if(view == forestButton){
+            if (roomSound == null) {
+                roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.forest);
+                roomSound.setLooping(true);
+                roomSound.start();
+            } else if (!roomSound.isPlaying()) {
+                roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.forest);
+                roomSound.start();
+            }
+            newSound = "forest";
+            if (!flags.get("exploreMode")) {
+                if ((flags.get("applePicking") && !flags.get("appleDone")) || flags.get("cheats")){
+                    // Switch to the forest minigame
+                    Intent forestIntent = new Intent(PlayScreen.this, ForestScreen.class);
+                    forestIntent.putExtra("flags", flags);
+                    Log.d("Flags Before Forest", flags.toString());
+                    startActivity(forestIntent);
+
+                }
+            }
+            pauseMediaPlayer();
+            flags.put("visitForest", true);
+        }
+        else if(view == mountainButton){
+            if (roomSound == null) {
+                roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.mountain);
+                roomSound.setLooping(true);
+                roomSound.start();
+            } else if (!roomSound.isPlaying()) {
+                roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.mountain);
+                roomSound.start();
+            }
+            newSound = "mountain";
+            if (!flags.get("exploreMode")) {
+                if ((flags.get("bossBeating") && !flags.get("dragonDone")) || flags.get("cheats")) {
+                    // Switch to dragon minigame
+                    Intent mountainIntent = new Intent(PlayScreen.this, MountainScreen.class);
+                    mountainIntent.putExtra("flags", flags);
+                    Log.d("Flags Before Mountain", flags.toString());
+                    startActivity(mountainIntent);
+                }
+            }
+            pauseMediaPlayer();
+            flags.put("visitMountain", true);
+        }
+        else if(view == townButton){
+            if (roomSound == null) {
+                roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.town);
+                roomSound.setLooping(true);
+                roomSound.start();
+            } else if (!roomSound.isPlaying()) {
+                roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.town);
+                roomSound.start();
+            }
+            newSound = "town";
+            if (!flags.get("exploreMode")) {
+                // Switch to the town dialogues
+                if (!flags.get("applePicking")){
+                    // Dialogue to tell player to go pick apples
+                    speak("Greetings explorer! Would you mind going to the forest and picking some apples for us? We're running out of food!");
+                    flags.put("applePicking", true);
+                }
+                else if (flags.get("appleDone") && !flags.get("duneDigging")){
+                    // Dialogue to tell player to go get sword at beach
+                    speak("Welcome back! Thanks for getting some apples, you should go to the beach and find the sword of legends!");
+                    flags.put("duneDigging", true);
+                }
+                else if (flags.get("swordDone") && !flags.get("bossBeating")){
+                    // Dialogue to tell player to go fight dragon
+                    speak("Wow, you got the sword! You really are the hero of legends! Quickly, go to the mountain and slay the dragon!");
+                    flags.put("bossBeating", true);
+                }
+                else if (flags.get("dragonDone") && !flags.get("gameDone")){
+                    // Dialogue to tell player congratulations
+                    speak("You did it! I don't know how we can ever repay you.");
+                    int count = 0;
+                    while(count < 5) {
+                        speak("Love me");
+                        count++;
+                    }
+
+                    flags.put("gameDone", true);
+                }
+            }
+            pauseMediaPlayer();
+            flags.put("visitTown", true);
+        }
+        // This sets the explore mode to false so that we can begin giving quests
+        if (flags.get("visitBeach") && flags.get("visitForest") && flags.get("visitMountain") && flags.get("visitTown")) {
+            flags.put("exploreMode", false);
+        }
+        TextView newText = (TextView) findViewById(R.id.roomName);
+        // This could be removed, mainly used to make sure beacon switching is working.
+        newText.setText("Nearest Beacon is " + newSound);
+        // Log.d("Beacon", "Nearest = " + places);
     }
 
 }
