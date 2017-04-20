@@ -182,7 +182,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
             for (String result : matches)
                 text += result + "\n";
 
-            myText.setText("You Said: " + text);
+            myText.setText("You Said: " + mResult);
 
             if (mResult.equals("I have the power")) {
                 Log.d("Test", text);
