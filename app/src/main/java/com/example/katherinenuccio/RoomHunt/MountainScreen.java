@@ -22,7 +22,7 @@ import android.widget.ToggleButton;
 
 public class MountainScreen extends Activity implements RecognitionListener {
 
-    private TextView returnedText;
+    private TextView returnedText, myText;
     private ToggleButton toggleButton;
     private ProgressBar progressBar;
     private SpeechRecognizer speech = null;
@@ -39,6 +39,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mountain_screen);
         returnedText = (TextView) findViewById(R.id.textView1);
+        myText = (TextView) findViewById(R.id.textView2);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 //        toggleButton = (ToggleButton) findViewById(R.id.toggleButton1);
         Intent intent = getIntent();
@@ -138,8 +139,8 @@ public class MountainScreen extends Activity implements RecognitionListener {
     public void onError(int errorCode) {
         if (mResult != null) {
             Log.d("VOICE", mResult);
-            returnedText.setText(mResult);
-            if (mResult.toLowerCase().equals("i have the power")) {
+            myText.setText("You said: " + mResult);
+            if (mResult.equals("I have the power")) {
                 beatBoss();
             } else {
                 returnedText.setText("Sorry, that's not the right phrase");
@@ -175,15 +176,16 @@ public class MountainScreen extends Activity implements RecognitionListener {
     public void onResults(Bundle results) {
         if (results != null) {
             Log.i(LOG_TAG, "onResults");
-            Log.d("VOICE", results.toString());
             ArrayList<String> matches = results
                     .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             String text = "";
             for (String result : matches)
                 text += result + "\n";
 
-            returnedText.setText(text);
-            if (text.toLowerCase().equals("i have the power")) {
+            myText.setText("You Said: " + text);
+
+            if (mResult.equals("I have the power")) {
+                Log.d("Test", text);
                 beatBoss();
             } else {
                 returnedText.setText("Sorry, that's not the right phrase");

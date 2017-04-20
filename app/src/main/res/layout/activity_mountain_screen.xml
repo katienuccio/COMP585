@@ -25,12 +25,23 @@
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="97dp"
-        android:layout_height="52dp"
+        android:layout_width="261dp"
+        android:layout_height="53dp"
         android:layout_below="@+id/progressBar1"
         android:layout_centerHorizontal="true"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="58dp"
+        android:layout_marginLeft="18dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="335dp"
+        android:layout_height="57dp"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="158dp"
         android:layout_marginLeft="18dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 
