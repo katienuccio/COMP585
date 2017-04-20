@@ -19,7 +19,6 @@ public class MenuScreen extends AppCompatActivity implements View.OnClickListene
 
     private HashMap<String, Boolean> flags;
     private TextView title;
-    private TextView currRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,6 @@ public class MenuScreen extends AppCompatActivity implements View.OnClickListene
 
         flags = new HashMap<String, Boolean>();
         title = (TextView) findViewById(R.id.main_title);
-        currRoom = (TextView) findViewById(R.id.currRoom);
     }
 
     @Override

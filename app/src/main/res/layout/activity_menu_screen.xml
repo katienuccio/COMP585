@@ -21,30 +21,14 @@
         android:text="RoomHunt"
         android:textAppearance="@android:style/TextAppearance.Material.Menu" />
 
-    <TextView
-        android:id="@+id/currRoom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/main_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="11dp"
-        android:text="Current Room : " />
-
-    <Button
-        android:id="@+id/profile_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/play_button"
-        android:layout_marginTop="21dp"
-        android:text="Profile" />
 
     <Button
         android:id="@+id/play_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/currRoom"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="59dp"
-        android:text="PLAY" />
+        android:layout_marginTop="53dp"
+        android:text="PLAY"
+        android:layout_below="@+id/main_title"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
