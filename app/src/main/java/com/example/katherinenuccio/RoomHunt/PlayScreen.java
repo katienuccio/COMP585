@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.estimote.sdk.SystemRequirementsChecker;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -275,6 +276,8 @@ public class PlayScreen extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        SystemRequirementsChecker.checkWithDefaultDialogs(this);
 
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
