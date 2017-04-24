@@ -1,13 +1,16 @@
 package com.example.katherinenuccio.RoomHunt;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
+import android.os.Build;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -33,6 +36,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
     private TextView resultTEXT;
     private TextView newText;
     private boolean listening;
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,22 @@ public class MountainScreen extends Activity implements RecognitionListener {
         Intent intent = getIntent();
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         flags.put("dragonDone", true);
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                Log.d("Test", "Init");
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+                    Log.e("TTS", "Initialization Succeeded");
+                    speak("Welcome to the Mountain. Tap the screen and say I have the power to unlock the sword.");
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "This Language Is Not Supported");
+                    }
+                } else {
+                    Log.e("TTS", "Initialization Failed");
+                }
+            }
+        });
         progressBar.setVisibility(View.INVISIBLE);
         speech = SpeechRecognizer.createSpeechRecognizer(this);
         speech.setRecognitionListener(this);
@@ -141,10 +161,16 @@ public class MountainScreen extends Activity implements RecognitionListener {
             Log.d("VOICE", mResult);
             myText.setText("You said: " + mResult);
             if (mResult.equals("I have the power")) {
+                speak("Congratulations! You have unlocked the sword.");
                 beatBoss();
             } else {
-                returnedText.setText("Sorry, that's not the right phrase");
+                speak("I'm sorry, I couldn't hear you. Please try again.");
+                returnedText.setText("Sorry, that's not the right phrase. Please try again.");
             }
+        } else {
+            returnedText.setText("I'm sorry, I couldn't hear you. Please try again.");
+            speak("I'm sorry, I couldn't hear you. Please try again.");
+
         }
 //        toggleButton.setChecked(false);
 
@@ -185,11 +211,15 @@ public class MountainScreen extends Activity implements RecognitionListener {
             myText.setText("You Said: " + mResult);
 
             if (mResult.equals("I have the power")) {
-                Log.d("Test", text);
+                speak("Congratulations! You have unlocked the sword.");
                 beatBoss();
             } else {
-                returnedText.setText("Sorry, that's not the right phrase");
+                speak("Sorry, that's not the right phrase. Please try again.");
+                returnedText.setText("Sorry, that's not the right phrase. Please try again.");
             }
+        } else {
+            returnedText.setText("I'm sorry, I couldn't hear you. Please try again.");
+            speak("I'm sorry, I couldn't hear you. Please try again.");
         }
     }
 
@@ -205,6 +235,15 @@ public class MountainScreen extends Activity implements RecognitionListener {
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Log.d("Flags During Mountain", flags.toString());
         startActivity(i);
+    }
+
+    // Text to speech code. For deprecation/compatibility purposes.
+    private void speak(String text) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        } else {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
     }
 
     public static String getErrorText(int errorCode) {
