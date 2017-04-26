@@ -13,28 +13,20 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class MountainScreen extends Activity implements RecognitionListener {
 
     private TextView returnedText, myText;
-    private ToggleButton toggleButton;
     private ProgressBar progressBar;
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent;
     private String LOG_TAG = "VoiceRecognition";
     private String mResult;
     private HashMap<String, Boolean> flags;
-    private TextView resultTEXT;
-    private TextView newText;
     private boolean listening;
     private TextToSpeech tts;
 
@@ -45,7 +37,6 @@ public class MountainScreen extends Activity implements RecognitionListener {
         returnedText = (TextView) findViewById(R.id.textView1);
         myText = (TextView) findViewById(R.id.textView2);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-//        toggleButton = (ToggleButton) findViewById(R.id.toggleButton1);
         Intent intent = getIntent();
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         flags.put("dragonDone", true);
@@ -56,6 +47,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
+                    returnedText.setText("Welcome to the Mountain. Tap the screen and say I have the power to unlock the sword.");
                     speak("Welcome to the Mountain. Tap the screen and say I have the power to unlock the sword.");
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
@@ -95,24 +87,6 @@ public class MountainScreen extends Activity implements RecognitionListener {
             }
 
         });
-
-//        toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView,
-//                                         boolean isChecked) {
-//                if (isChecked) {
-//                    progressBar.setVisibility(View.VISIBLE);
-//                    progressBar.setIndeterminate(true);
-//                    speech.startListening(recognizerIntent);
-//                } else {
-//                    progressBar.setIndeterminate(false);
-//                    progressBar.setVisibility(View.INVISIBLE);
-//                    speech.stopListening();
-//                }
-//            }
-//        });
-
     }
 
     @Override
@@ -146,38 +120,31 @@ public class MountainScreen extends Activity implements RecognitionListener {
     @Override
     public void onEndOfSpeech() {
         Log.i(LOG_TAG, "onEndOfSpeech");
-//        progressBar.setIndeterminate(true);
         progressBar.setIndeterminate(false);
         progressBar.setVisibility(View.INVISIBLE);
         speech.stopListening();
         listening = false;
-
-//        toggleButton.setChecked(false);
     }
 
     @Override
     public void onError(int errorCode) {
         if (mResult != null) {
             Log.d("VOICE", mResult);
-            myText.setText("You said: " + mResult);
+            myText.setText(mResult);
+            Log.d("test", mResult);
             if (mResult.equals("I have the power")) {
+                returnedText.setText("Congratulations! You have unlocked the sword.");
                 speak("Congratulations! You have unlocked the sword.");
                 beatBoss();
             } else {
-                speak("I'm sorry, I couldn't hear you. Please try again.");
                 returnedText.setText("Sorry, that's not the right phrase. Please try again.");
+                speak("Sorry, that's not the right phrase. Please try again.");
             }
         } else {
             returnedText.setText("I'm sorry, I couldn't hear you. Please try again.");
             speak("I'm sorry, I couldn't hear you. Please try again.");
 
         }
-//        toggleButton.setChecked(false);
-
-//        String errorMessage = getErrorText(errorCode);
-//        Log.d(LOG_TAG, "FAILED " + errorMessage);
-//        returnedText.setText(errorMessage);
-//        toggleButton.setChecked(false);
     }
 
     @Override
@@ -202,20 +169,14 @@ public class MountainScreen extends Activity implements RecognitionListener {
     public void onResults(Bundle results) {
         if (results != null) {
             Log.i(LOG_TAG, "onResults");
-            ArrayList<String> matches = results
-                    .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-            String text = "";
-            for (String result : matches)
-                text += result + "\n";
-
-            myText.setText("You Said: " + mResult);
-
+            myText.setText(mResult);
             if (mResult.equals("I have the power")) {
+                returnedText.setText("Congratulations! You have unlocked the sword.");
                 speak("Congratulations! You have unlocked the sword.");
                 beatBoss();
             } else {
-                speak("Sorry, that's not the right phrase. Please try again.");
                 returnedText.setText("Sorry, that's not the right phrase. Please try again.");
+                speak("Sorry, that's not the right phrase. Please try again.");
             }
         } else {
             returnedText.setText("I'm sorry, I couldn't hear you. Please try again.");
@@ -282,5 +243,4 @@ public class MountainScreen extends Activity implements RecognitionListener {
         }
         return message;
     }
-
 }
