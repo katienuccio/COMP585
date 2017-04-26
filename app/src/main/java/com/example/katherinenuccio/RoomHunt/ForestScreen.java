@@ -20,9 +20,9 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
 
     private Button forestbutt;
     private ImageButton appleButton;
-    private TextView newText;
+    private TextView newText, instructionText;
     private HashMap<String, Boolean> flags;
-    private int counter = 0;
+    private int counter = -1;
     private TextToSpeech tts;
     private CountDownTimer timer;
 
@@ -34,6 +34,7 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         flags.put("appleDone", true);
         newText = (TextView) findViewById(R.id.totalClicks);
+        instructionText = (TextView) findViewById(R.id.instructionsForest);
         appleButton = (ImageButton) findViewById(R.id.appleButton);
 
         // Text to Speech
@@ -43,7 +44,9 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    speak("Welcome to the Forest. Tap the screen to gather as many apples as you can in, but hurry! We don't have much time. Begin!");
+                    String instructions = "Welcome to the Forest. Tap the screen to gather as many apples as you can, but hurry! We don't have much time. Tap to Begin!";
+                    instructionText.setText(instructions);
+                    speak(instructions);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }
@@ -53,11 +56,50 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
+
+        // Buttons
+        forestbutt = (Button) findViewById(R.id.forestbutt);
+        forestbutt.setOnClickListener(this);
+        appleButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == forestbutt) {
+            Intent i = new Intent(this, PlayScreen.class);
+            i.putExtra("flags", flags);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Log.d("Flags During Forest", flags.toString());
+            startActivity(i);
+        }
+        if (view == appleButton) {
+            if (counter == -1) {
+                startTimer();
+                counter++;
+            } else {
+                counter++;
+                newText.setText("Apples Picked: " + counter);
+            }
+
+        }
+    }
+
+    private void appleDone() {
+        Intent i = new Intent(this, PlayScreen.class);
+        i.putExtra("flags", flags);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Log.d("Flags During Forest", flags.toString());
+        startActivity(i);
+    }
+
+    private void startTimer() {
         // Timer
         timer = new CountDownTimer(45000, 1000) {
             @Override
             public void onTick(long l) {
-                newText.setText("Clicks: " + counter);
+                newText.setText("Apples Picked: " + counter);
+                Log.d("Timer", timer.toString());
             }
             @Override
             public void onFinish() {
@@ -77,34 +119,7 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
                 }
 
             }
-        };
-
-        // Buttons
-        forestbutt = (Button) findViewById(R.id.forestbutt);
-        forestbutt.setOnClickListener(this);
-        appleButton.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == forestbutt) {
-            Intent i = new Intent(this, PlayScreen.class);
-            i.putExtra("flags", flags);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            Log.d("Flags During Forest", flags.toString());
-            startActivity(i);
-        }
-        if (view == appleButton) {
-            counter++;
-        }
-    }
-
-    private void appleDone() {
-        Intent i = new Intent(this, PlayScreen.class);
-        i.putExtra("flags", flags);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        Log.d("Flags During Forest", flags.toString());
-        startActivity(i);
+        }.start();
     }
 
     private void restart() {
