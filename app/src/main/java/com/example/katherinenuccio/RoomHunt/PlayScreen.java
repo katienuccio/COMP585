@@ -246,7 +246,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     }
 
                     // This could be removed, mainly used to make sure beacon switching is working.
-                    newText.setText("Nearest Beacon is " + places);
+                    newText.setText(places);
                     // Log.d("Beacon", "Nearest = " + places);
                 }
             }
@@ -414,7 +414,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         }
         TextView newText = (TextView) findViewById(R.id.roomName);
         // This could be removed, mainly used to make sure beacon switching is working.
-        newText.setText("Nearest Beacon is " + newSound);
+        newText.setText(newSound);
         // Log.d("Beacon", "Nearest = " + places);
     }
 
