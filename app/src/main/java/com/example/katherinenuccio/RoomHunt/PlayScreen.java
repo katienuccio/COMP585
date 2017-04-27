@@ -61,6 +61,10 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
     private String newSound;
     private TextToSpeech tts;
 
+    // Other
+    private TextView mainText;
+    private String mainInstructions;
+
     // Logic to flag game progression properly
     // This helps us not repeat mini-games or give a player the same quest over and over
     // We use a Map to store each boolean value in order to easily pass the variables through
@@ -72,6 +76,9 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_screen);
         beaconManager = new BeaconManager(this);
+
+        mainText = (TextView) findViewById(R.id.mainText);
+
 
         beachButton = (Button) findViewById(R.id.beach_button);
         beachButton.setOnClickListener(this);
@@ -90,7 +97,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 HashMap<String, Boolean> newFlags = (HashMap<String, Boolean>) intent.getSerializableExtra("flags");
                 if (!newFlags.isEmpty()) {
                     flags = newFlags;
-                    Log.d("Flags After Intents", flags.toString());
                 }
             }
             catch (Exception ex){
@@ -99,13 +105,13 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                Log.d("Test", "Init");
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
                     if(flags.get("exploreMode")) {
-                        Log.d("Test", "here");
-                        speak("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.");
+                        mainInstructions = ("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.");
+                        speak(mainInstructions);
+                        mainText.setText(mainInstructions);
                     }
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
@@ -188,22 +194,30 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 // Switch to the town dialogues
                                 if (!flags.get("applePicking")){
                                     // Dialogue to tell player to go pick apples
-                                    speak("Greetings explorer! Would you mind going to the forest and picking some apples for us? We're running out of food!");
+                                    mainInstructions = ("Greetings explorer! Would you mind going to the forest and picking some apples for us? We're running out of food!");
+                                    speak(mainInstructions);
+                                    mainText.setText(mainInstructions);
                                     flags.put("applePicking", true);
                                 }
                                 else if (flags.get("appleDone") && !flags.get("duneDigging")){
                                     // Dialogue to tell player to go get sword at beach
-                                    speak("Welcome back! Thanks for getting some apples, you should go to the beach and find the sword of legends!");
+                                    mainInstructions = ("Welcome back! Thanks for getting some apples, you should go to the beach and find the sword of legends!");
+                                    speak(mainInstructions);
+                                    mainText.setText(mainInstructions);
                                     flags.put("duneDigging", true);
                                 }
                                 else if (flags.get("swordDone") && !flags.get("bossBeating")){
                                     // Dialogue to tell player to go fight dragon
-                                    speak("Wow, you got the sword! You really are the hero of legends! Quickly, go to the mountain and slay the dragon!");
+                                    mainInstructions = ("Wow, you got the sword! You really are the hero of legends! Quickly, go to the mountain and slay the dragon!");
+                                    speak(mainInstructions);
+                                    mainText.setText(mainInstructions);
                                     flags.put("bossBeating", true);
                                 }
                                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                                     // Dialogue to tell player congratulations
-                                    speak("You did it! I don't know how we can ever repay you.");
+                                    mainInstructions = ("You did it! I don't know how we can ever repay you.");
+                                    speak(mainInstructions);
+                                    mainText.setText(mainInstructions);
                                     int count = 0;
                                     while(count < 5) {
                                         speak("Love me");
@@ -380,22 +394,30 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 // Switch to the town dialogues
                 if (!flags.get("applePicking")){
                     // Dialogue to tell player to go pick apples
-                    speak("Greetings explorer! Would you mind going to the forest and picking some apples for us? We're running out of food!");
+                    mainInstructions = ("Greetings explorer! Would you mind going to the forest and picking some apples for us? We're running out of food!");
+                    speak(mainInstructions);
+                    mainText.setText(mainInstructions);
                     flags.put("applePicking", true);
                 }
                 else if (flags.get("appleDone") && !flags.get("duneDigging")){
                     // Dialogue to tell player to go get sword at beach
-                    speak("Welcome back! Thanks for getting some apples, you should go to the beach and find the sword of legends!");
+                    mainInstructions = ("Welcome back! Thanks for getting some apples, you should go to the beach and find the sword of legends!");
+                    speak(mainInstructions);
+                    mainText.setText(mainInstructions);
                     flags.put("duneDigging", true);
                 }
                 else if (flags.get("swordDone") && !flags.get("bossBeating")){
                     // Dialogue to tell player to go fight dragon
-                    speak("Wow, you got the sword! You really are the hero of legends! Quickly, go to the mountain and slay the dragon!");
+                    mainInstructions = ("Wow, you got the sword! You really are the hero of legends! Quickly, go to the mountain and slay the dragon!");
+                    speak(mainInstructions);
+                    mainText.setText(mainInstructions);
                     flags.put("bossBeating", true);
                 }
                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                     // Dialogue to tell player congratulations
-                    speak("You did it! I don't know how we can ever repay you.");
+                    mainInstructions = ("You did it! I don't know how we can ever repay you.");
+                    speak(mainInstructions);
+                    mainText.setText(mainInstructions);
                     int count = 0;
                     while(count < 5) {
                         speak("Love me");

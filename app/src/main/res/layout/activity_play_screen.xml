@@ -25,23 +25,20 @@
 
     <TextView
         android:id="@+id/roomName"
-        android:layout_width="165dp"
-        android:layout_height="86dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="163dp"
+        android:layout_height="49dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="none"
         android:selectAllOnFocus="false"
         android:textAlignment="center"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
         android:id="@+id/beach_button"
@@ -104,5 +101,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/forest_button"
         app:layout_constraintHorizontal_bias="0.501" />
+
+    <TextView
+        android:id="@+id/mainText"
+        android:layout_width="304dp"
+        android:layout_height="67dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="18dp"
+        android:text="Instructions: "
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomName" />
 
 </android.support.constraint.ConstraintLayout>

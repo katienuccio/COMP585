@@ -129,9 +129,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
     @Override
     public void onError(int errorCode) {
         if (mResult != null) {
-            Log.d("VOICE", mResult);
             myText.setText(mResult);
-            Log.d("test", mResult);
             if (mResult.equals("I have the power")) {
                 returnedText.setText("Congratulations! You have unlocked the sword.");
                 speak("Congratulations! You have unlocked the sword.");
@@ -168,7 +166,6 @@ public class MountainScreen extends Activity implements RecognitionListener {
     @Override
     public void onResults(Bundle results) {
         if (results != null) {
-            Log.i(LOG_TAG, "onResults");
             myText.setText(mResult);
             if (mResult.equals("I have the power")) {
                 returnedText.setText("Congratulations! You have unlocked the sword.");
@@ -194,7 +191,6 @@ public class MountainScreen extends Activity implements RecognitionListener {
         Intent i = new Intent(this, PlayScreen.class);
         i.putExtra("flags", flags);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        Log.d("Flags During Mountain", flags.toString());
         startActivity(i);
     }
 

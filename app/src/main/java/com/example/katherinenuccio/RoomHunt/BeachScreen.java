@@ -19,12 +19,13 @@ import java.util.HashMap;
 import java.util.Locale;
 
 
-public class BeachScreen extends AppCompatActivity implements View.OnClickListener {
+public class BeachScreen extends AppCompatActivity  {
 
-    private Button beachbutt;
     private HashMap<String, Boolean> flags;
-    private TextView shakes;
+    private TextView shakes, beachText;
     private TextToSpeech tts;
+    private String beachInstructions;
+
     // The following are used for the shake detection
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -36,6 +37,7 @@ public class BeachScreen extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beach_screen);
         shakes = (TextView) findViewById(R.id.totalShakes);
+        beachText = (TextView) findViewById(R.id.beachText);
         Intent intent = getIntent();
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         flags.put("swordDone", true);
@@ -47,7 +49,9 @@ public class BeachScreen extends AppCompatActivity implements View.OnClickListen
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    speak("Welcome to the Beach. Shake your phone to find the sword of legends.");
+                    beachInstructions = ("Welcome to the Beach. Dig with your phone to find the sword of legends.");
+                    speak(beachInstructions);
+                    beachText.setText(beachInstructions);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }
@@ -57,8 +61,6 @@ public class BeachScreen extends AppCompatActivity implements View.OnClickListen
             }
         });
 
-        beachbutt = (Button) findViewById(R.id.beachbutt);
-        beachbutt.setOnClickListener(this);
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager
@@ -81,13 +83,22 @@ public class BeachScreen extends AppCompatActivity implements View.OnClickListen
 
     private void handleShakeEvent(int count) {
         if(totalShakes >= 10) {
-            speak("You did it! Return to town.");
+            beachInstructions = ("You did it! Return to town.");
+            speak(beachInstructions);
+            beachText.setText(beachInstructions);
             swordDone();
         } else {
             totalShakes++;
-            if(totalShakes == 3){speak("You see something in the sand! Keep digging.");}
-            if(totalShakes == 8){speak("You're almost there!");}
-            Log.d("Beach", "Shooketh " + totalShakes);
+            if(totalShakes == 3){
+                beachInstructions = ("You see something in the sand! Keep digging.");
+                speak(beachInstructions);
+                beachText.setText(beachInstructions);
+            }
+            if(totalShakes == 8){
+                beachInstructions = ("You're almost there!");
+                speak(beachInstructions);
+                beachText.setText(beachInstructions);
+            }
             shakes.setText("Total: " + totalShakes);
         }
     }
@@ -96,7 +107,6 @@ public class BeachScreen extends AppCompatActivity implements View.OnClickListen
         Intent i = new Intent(this, PlayScreen.class);
         i.putExtra("flags", flags);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        Log.d("Flags During Beach", flags.toString());
         startActivity(i);
     }
 
@@ -123,10 +133,4 @@ public class BeachScreen extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view == beachbutt) {
-            swordDone();
-        }
-    }
 }

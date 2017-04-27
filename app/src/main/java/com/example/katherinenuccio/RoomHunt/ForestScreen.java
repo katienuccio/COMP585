@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.os.CountDownTimer;
@@ -18,9 +17,8 @@ import java.util.Locale;
 
 public class ForestScreen extends AppCompatActivity implements View.OnClickListener {
 
-    private Button forestbutt;
     private ImageButton appleButton;
-    private TextView newText, instructionText;
+    private TextView newText, instructionText, timeLeft;
     private HashMap<String, Boolean> flags;
     private int counter = -1;
     private TextToSpeech tts;
@@ -35,6 +33,7 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
         flags.put("appleDone", true);
         newText = (TextView) findViewById(R.id.totalClicks);
         instructionText = (TextView) findViewById(R.id.instructionsForest);
+        timeLeft = (TextView) findViewById(R.id.timeID);
         appleButton = (ImageButton) findViewById(R.id.appleButton);
 
         // Text to Speech
@@ -59,20 +58,11 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
 
 
         // Buttons
-        forestbutt = (Button) findViewById(R.id.forestbutt);
-        forestbutt.setOnClickListener(this);
         appleButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (view == forestbutt) {
-            Intent i = new Intent(this, PlayScreen.class);
-            i.putExtra("flags", flags);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            Log.d("Flags During Forest", flags.toString());
-            startActivity(i);
-        }
         if (view == appleButton) {
             if (counter == -1) {
                 startTimer();
@@ -98,8 +88,7 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
         timer = new CountDownTimer(45000, 1000) {
             @Override
             public void onTick(long l) {
-                newText.setText("Apples Picked: " + counter);
-                Log.d("Timer", timer.toString());
+                timeLeft.setText("Time: " + (l/1000));
             }
             @Override
             public void onFinish() {
