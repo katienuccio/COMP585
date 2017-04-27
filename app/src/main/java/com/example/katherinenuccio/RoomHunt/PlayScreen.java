@@ -8,6 +8,8 @@ import android.util.Log;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.view.HapticFeedbackConstants;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -314,6 +316,8 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
     }
 
     public void onClick(View view) {
+        view.playSoundEffect(SoundEffectConstants.CLICK);
+        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         if (view == beachButton) {
             if (roomSound == null) {
                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.ocean);

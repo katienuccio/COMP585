@@ -7,6 +7,8 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -73,6 +75,8 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
             }
 
         }
+        view.playSoundEffect(SoundEffectConstants.CLICK);
+        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
     }
 
     private void appleDone() {
