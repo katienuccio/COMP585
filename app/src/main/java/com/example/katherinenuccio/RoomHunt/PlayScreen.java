@@ -72,6 +72,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
     // We use a Map to store each boolean value in order to easily pass the variables through
     // Intents and into our other activities (mini-games)
     private HashMap<String, Boolean> flags;
+    private HashMap<String, String> instructions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         townButton.setOnClickListener(this);
 
         flags = new HashMap<String, Boolean>();
+        instructions = new HashMap<String, String>();
 
         Intent intent = getIntent();
         if (intent != null){
@@ -100,6 +102,8 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 if (!newFlags.isEmpty()) {
                     flags = newFlags;
                 }
+                instructions = (HashMap<String, String>) intent.getSerializableExtra("instructions");
+                mainInstructions = instructions.get("instructions");
             }
             catch (Exception ex){
             }
@@ -110,11 +114,8 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    if(flags.get("exploreMode")) {
-                        mainInstructions = ("Welcome to Room Hunt, please explore the room and find all four locations at the various walls around the room.");
-                        speak(mainInstructions);
-                        mainText.setText(mainInstructions);
-                    }
+                    speak(mainInstructions);
+                    mainText.setText(mainInstructions);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }
@@ -152,7 +153,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                     // Switch to beach minigame
                                     Intent beachIntent = new Intent(PlayScreen.this, BeachScreen.class);
                                     beachIntent.putExtra("flags", flags);
-                                    Log.d("Flags Before Beach", flags.toString());
                                     startActivity(beachIntent);
                                 }
                             }
@@ -174,7 +174,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                     // Switch to the forest minigame
                                     Intent forestIntent = new Intent(PlayScreen.this, ForestScreen.class);
                                     forestIntent.putExtra("flags", flags);
-                                    Log.d("Flags Before Forest", flags.toString());
                                     startActivity(forestIntent);
 
                                 }
@@ -247,7 +246,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                     // Switch to dragon minigame
                                     Intent mountainIntent = new Intent(PlayScreen.this, MountainScreen.class);
                                     mountainIntent.putExtra("flags", flags);
-                                    Log.d("Flags Before Mountain", flags.toString());
                                     startActivity(mountainIntent);
                                 }
                             }
@@ -333,7 +331,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     // Switch to beach minigame
                     Intent beachIntent = new Intent(PlayScreen.this, BeachScreen.class);
                     beachIntent.putExtra("flags", flags);
-                    Log.d("Flags Before Beach", flags.toString());
                     startActivity(beachIntent);
                 }
             }
@@ -354,7 +351,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     // Switch to the forest minigame
                     Intent forestIntent = new Intent(PlayScreen.this, ForestScreen.class);
                     forestIntent.putExtra("flags", flags);
-                    Log.d("Flags Before Forest", flags.toString());
                     startActivity(forestIntent);
 
                 }
@@ -377,7 +373,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     // Switch to dragon minigame
                     Intent mountainIntent = new Intent(PlayScreen.this, MountainScreen.class);
                     mountainIntent.putExtra("flags", flags);
-                    Log.d("Flags Before Mountain", flags.toString());
                     startActivity(mountainIntent);
                 }
             }
@@ -442,6 +437,12 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         // This could be removed, mainly used to make sure beacon switching is working.
         newText.setText(newSound);
         // Log.d("Beacon", "Nearest = " + places);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        return;
     }
 
 }

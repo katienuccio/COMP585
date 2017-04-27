@@ -20,6 +20,7 @@ import java.util.Locale;
 public class BeachScreen extends AppCompatActivity  {
 
     private HashMap<String, Boolean> flags;
+    private HashMap<String, String> instructions;
     private TextView shakes, beachText;
     private TextToSpeech tts;
     private String beachInstructions;
@@ -38,7 +39,9 @@ public class BeachScreen extends AppCompatActivity  {
         beachText = (TextView) findViewById(R.id.beachText);
         Intent intent = getIntent();
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
+        instructions = new HashMap<String, String>();
         flags.put("swordDone", true);
+        instructions.put("instructions", "Return to town");
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -82,7 +85,7 @@ public class BeachScreen extends AppCompatActivity  {
 
     private void handleShakeEvent(int count) {
         if(totalShakes >= 10) {
-            beachInstructions = ("You did it! Return to town.");
+            beachInstructions = ("You did it!");
             speak(beachInstructions);
             beachText.setText(beachInstructions);
             swordDone();
@@ -98,13 +101,14 @@ public class BeachScreen extends AppCompatActivity  {
                 speak(beachInstructions);
                 beachText.setText(beachInstructions);
             }
-            shakes.setText("Total: " + totalShakes);
+            shakes.setText("Digs: " + totalShakes);
         }
     }
 
     private void swordDone(){
         Intent i = new Intent(this, PlayScreen.class);
         i.putExtra("flags", flags);
+        i.putExtra("instructions", instructions);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
     }
@@ -130,6 +134,12 @@ public class BeachScreen extends AppCompatActivity  {
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        return;
     }
 
 }

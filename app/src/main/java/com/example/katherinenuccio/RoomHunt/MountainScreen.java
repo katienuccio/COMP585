@@ -26,6 +26,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
     private String LOG_TAG = "VoiceRecognition";
     private String mResult;
     private HashMap<String, Boolean> flags;
+    private HashMap<String, String> instructions;
     private boolean listening;
     private TextToSpeech tts;
 
@@ -39,6 +40,8 @@ public class MountainScreen extends Activity implements RecognitionListener {
         Intent intent = getIntent();
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         flags.put("dragonDone", true);
+        instructions = new HashMap<String, String>();
+        instructions.put("instructions", "Return to town");
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -46,8 +49,8 @@ public class MountainScreen extends Activity implements RecognitionListener {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    returnedText.setText("Welcome to the Mountain. Tap the screen and say I have the power to unlock the sword.");
-                    speak("Welcome to the Mountain. Tap the screen and say I have the power to unlock the sword.");
+                    returnedText.setText("Welcome to the Mountain. Tap the screen and say I have the power to slay the dragon.");
+                    speak("Welcome to the Mountain. Tap the screen and say I have the power to slay the dragon.");
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }
@@ -167,8 +170,8 @@ public class MountainScreen extends Activity implements RecognitionListener {
         if (results != null) {
             myText.setText(mResult);
             if (mResult.equals("I have the power")) {
-                returnedText.setText("Congratulations! You have unlocked the sword.");
-                speak("Congratulations! You have unlocked the sword.");
+                returnedText.setText("Congratulations! You have slain the dragon!");
+                speak("Congratulations! You have slain the dragon!");
                 beatBoss();
             } else {
                 returnedText.setText("Sorry, that's not the right phrase. Please try again.");
@@ -189,6 +192,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
     public void beatBoss() {
         Intent i = new Intent(this, PlayScreen.class);
         i.putExtra("flags", flags);
+        i.putExtra("instructions", instructions);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
     }
@@ -237,5 +241,11 @@ public class MountainScreen extends Activity implements RecognitionListener {
                 break;
         }
         return message;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        return;
     }
 }
