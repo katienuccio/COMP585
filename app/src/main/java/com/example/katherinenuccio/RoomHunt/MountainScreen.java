@@ -1,49 +1,62 @@
 package com.example.katherinenuccio.RoomHunt;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
+import android.os.Build;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class MountainScreen extends Activity implements RecognitionListener {
 
-    private TextView returnedText;
-    private ToggleButton toggleButton;
+    private TextView returnedText, myText;
     private ProgressBar progressBar;
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent;
     private String LOG_TAG = "VoiceRecognition";
     private String mResult;
     private HashMap<String, Boolean> flags;
-    private TextView resultTEXT;
-    private TextView newText;
     private boolean listening;
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mountain_screen);
         returnedText = (TextView) findViewById(R.id.textView1);
+        myText = (TextView) findViewById(R.id.textView2);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-//        toggleButton = (ToggleButton) findViewById(R.id.toggleButton1);
         Intent intent = getIntent();
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         flags.put("dragonDone", true);
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                Log.d("Test", "Init");
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+                    Log.e("TTS", "Initialization Succeeded");
+                    returnedText.setText("Welcome to the Mountain. Tap the screen and say I have the power to unlock the sword.");
+                    speak("Welcome to the Mountain. Tap the screen and say I have the power to unlock the sword.");
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "This Language Is Not Supported");
+                    }
+                } else {
+                    Log.e("TTS", "Initialization Failed");
+                }
+            }
+        });
         progressBar.setVisibility(View.INVISIBLE);
         speech = SpeechRecognizer.createSpeechRecognizer(this);
         speech.setRecognitionListener(this);
@@ -74,24 +87,6 @@ public class MountainScreen extends Activity implements RecognitionListener {
             }
 
         });
-
-//        toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView,
-//                                         boolean isChecked) {
-//                if (isChecked) {
-//                    progressBar.setVisibility(View.VISIBLE);
-//                    progressBar.setIndeterminate(true);
-//                    speech.startListening(recognizerIntent);
-//                } else {
-//                    progressBar.setIndeterminate(false);
-//                    progressBar.setVisibility(View.INVISIBLE);
-//                    speech.stopListening();
-//                }
-//            }
-//        });
-
     }
 
     @Override
@@ -125,32 +120,29 @@ public class MountainScreen extends Activity implements RecognitionListener {
     @Override
     public void onEndOfSpeech() {
         Log.i(LOG_TAG, "onEndOfSpeech");
-//        progressBar.setIndeterminate(true);
         progressBar.setIndeterminate(false);
         progressBar.setVisibility(View.INVISIBLE);
         speech.stopListening();
         listening = false;
-
-//        toggleButton.setChecked(false);
     }
 
     @Override
     public void onError(int errorCode) {
         if (mResult != null) {
-            Log.d("VOICE", mResult);
-            returnedText.setText(mResult);
-            if (mResult.toLowerCase().equals("i have the power")) {
+            myText.setText(mResult);
+            if (mResult.equals("I have the power")) {
+                returnedText.setText("Congratulations! You have unlocked the sword.");
+                speak("Congratulations! You have unlocked the sword.");
                 beatBoss();
             } else {
-                returnedText.setText("Sorry, that's not the right phrase");
+                returnedText.setText("Sorry, that's not the right phrase. Please try again.");
+                speak("Sorry, that's not the right phrase. Please try again.");
             }
-        }
-//        toggleButton.setChecked(false);
+        } else {
+            returnedText.setText("I'm sorry, I couldn't hear you. Please try again.");
+            speak("I'm sorry, I couldn't hear you. Please try again.");
 
-//        String errorMessage = getErrorText(errorCode);
-//        Log.d(LOG_TAG, "FAILED " + errorMessage);
-//        returnedText.setText(errorMessage);
-//        toggleButton.setChecked(false);
+        }
     }
 
     @Override
@@ -174,20 +166,18 @@ public class MountainScreen extends Activity implements RecognitionListener {
     @Override
     public void onResults(Bundle results) {
         if (results != null) {
-            Log.i(LOG_TAG, "onResults");
-            Log.d("VOICE", results.toString());
-            ArrayList<String> matches = results
-                    .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-            String text = "";
-            for (String result : matches)
-                text += result + "\n";
-
-            returnedText.setText(text);
-            if (text.toLowerCase().equals("i have the power")) {
+            myText.setText(mResult);
+            if (mResult.equals("I have the power")) {
+                returnedText.setText("Congratulations! You have unlocked the sword.");
+                speak("Congratulations! You have unlocked the sword.");
                 beatBoss();
             } else {
-                returnedText.setText("Sorry, that's not the right phrase");
+                returnedText.setText("Sorry, that's not the right phrase. Please try again.");
+                speak("Sorry, that's not the right phrase. Please try again.");
             }
+        } else {
+            returnedText.setText("I'm sorry, I couldn't hear you. Please try again.");
+            speak("I'm sorry, I couldn't hear you. Please try again.");
         }
     }
 
@@ -201,8 +191,16 @@ public class MountainScreen extends Activity implements RecognitionListener {
         Intent i = new Intent(this, PlayScreen.class);
         i.putExtra("flags", flags);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        Log.d("Flags During Mountain", flags.toString());
         startActivity(i);
+    }
+
+    // Text to speech code. For deprecation/compatibility purposes.
+    private void speak(String text) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        } else {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
     }
 
     public static String getErrorText(int errorCode) {
@@ -241,5 +239,4 @@ public class MountainScreen extends Activity implements RecognitionListener {
         }
         return message;
     }
-
 }
