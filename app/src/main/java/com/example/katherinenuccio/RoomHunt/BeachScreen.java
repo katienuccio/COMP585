@@ -6,14 +6,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.speech.tts.TextToSpeech;
-import android.widget.Button;
 import android.hardware.SensorManager;
 import android.hardware.Sensor;
+import android.view.HapticFeedbackConstants;
+import android.view.SoundEffectConstants;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -22,6 +20,7 @@ import java.util.Locale;
 public class BeachScreen extends AppCompatActivity  {
 
     private HashMap<String, Boolean> flags;
+    private HashMap<String, String> instructions;
     private TextView shakes, beachText;
     private TextToSpeech tts;
     private String beachInstructions;
@@ -40,12 +39,12 @@ public class BeachScreen extends AppCompatActivity  {
         beachText = (TextView) findViewById(R.id.beachText);
         Intent intent = getIntent();
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
+        instructions = new HashMap<String, String>();
         flags.put("swordDone", true);
-        Log.d("Beach", "Made it");
+        instructions.put("instructions", "Return to town");
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                Log.d("Test", "Init");
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
@@ -75,15 +74,18 @@ public class BeachScreen extends AppCompatActivity  {
 				 * method you would use to setup whatever you want done once the
 				 * device has been shook.
 				 */
-				Log.d("Beach", "Here");
                 handleShakeEvent(count);
+
+                // We should consider adding a dig sound here. Added CLICK and vibrate for now
+                shakes.playSoundEffect(SoundEffectConstants.CLICK);
+                shakes.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             }
         });
     }
 
     private void handleShakeEvent(int count) {
         if(totalShakes >= 10) {
-            beachInstructions = ("You did it! Return to town.");
+            beachInstructions = ("You did it!");
             speak(beachInstructions);
             beachText.setText(beachInstructions);
             swordDone();
@@ -99,13 +101,14 @@ public class BeachScreen extends AppCompatActivity  {
                 speak(beachInstructions);
                 beachText.setText(beachInstructions);
             }
-            shakes.setText("Total: " + totalShakes);
+            shakes.setText("Digs: " + totalShakes);
         }
     }
 
     private void swordDone(){
         Intent i = new Intent(this, PlayScreen.class);
         i.putExtra("flags", flags);
+        i.putExtra("instructions", instructions);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
     }
@@ -131,6 +134,12 @@ public class BeachScreen extends AppCompatActivity  {
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        return;
     }
 
 }
