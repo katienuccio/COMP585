@@ -140,7 +140,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
 
                     switch(places){
                         case "Cove":
-                            if (!flags.get("exploreMode") && !flags.get("coveDone")) {
+                            if (!flags.get("coveDone")) {
                                 // Go to dance party!
                                 Intent coveIntent = new Intent(PlayScreen.this, CoveScreen.class);
                                 coveIntent.putExtra("flags", flags);

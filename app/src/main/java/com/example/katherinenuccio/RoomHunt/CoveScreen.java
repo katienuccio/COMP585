@@ -44,7 +44,7 @@ public class CoveScreen extends AppCompatActivity  {
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         instructions = new HashMap<String, String>();
         flags.put("coveDone", true);
-        instructions.put("instructions", "Return to town");
+        instructions.put("instructions", "Continue Exploring");
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
