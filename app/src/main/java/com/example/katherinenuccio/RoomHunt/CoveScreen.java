@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
+import android.widget.MediaController;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -24,6 +26,7 @@ public class CoveScreen extends AppCompatActivity  {
     private TextView shakes, coveText;
     private TextToSpeech tts;
     private String coveInstructions;
+    private MediaPlayer coveSound;
 
     // The following are used for the shake detection
     private SensorManager mSensorManager;
@@ -51,6 +54,7 @@ public class CoveScreen extends AppCompatActivity  {
                     coveInstructions = ("You found a secret cove! Inside is a treasure chest, the only way it will open is if you dance. Quick, start dancing!");
                     speak(coveInstructions);
                     coveText.setText(coveInstructions);
+                    coveSound = new MediaPlayer().create(CoveScreen.this, R.raw.sandstorm);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }
@@ -59,6 +63,8 @@ public class CoveScreen extends AppCompatActivity  {
                 }
             }
         });
+        coveSound.setLooping(true);
+        coveSound.start();
 
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -77,7 +83,6 @@ public class CoveScreen extends AppCompatActivity  {
                 handleShakeEvent(count);
 
                 // We should consider adding a dig sound here. Added CLICK and vibrate for now
-                shakes.playSoundEffect(SoundEffectConstants.CLICK);
                 shakes.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             }
         });
@@ -106,6 +111,9 @@ public class CoveScreen extends AppCompatActivity  {
     }
 
     private void coveDone(){
+        coveSound.stop();
+        coveSound.reset();
+        coveSound.release();
         Intent i = new Intent(this, PlayScreen.class);
         i.putExtra("flags", flags);
         i.putExtra("instructions", instructions);
