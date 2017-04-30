@@ -38,6 +38,8 @@
             android:screenOrientation="portrait"></activity>
         <activity android:name=".MountainScreen"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".CoveScreen"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

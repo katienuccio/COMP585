@@ -44,17 +44,20 @@ public class CoveScreen extends AppCompatActivity  {
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         instructions = new HashMap<String, String>();
         flags.put("coveDone", true);
-        instructions.put("instructions", "Continue Exploring");
+        String instruct = (String) intent.getSerializableExtra("instructions");
+        instructions.put("instructions", instruct);
+        coveSound = new MediaPlayer().create(CoveScreen.this, R.raw.sandstorm);
+        coveSound.setLooping(true);
+        coveSound.start();
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    coveInstructions = ("You found a secret cove! Inside is a treasure chest, the only way it will open is if you dance. Quick, start dancing!");
+                    coveInstructions = ("You stumbled upon some hidden treasure! The only way it will open is if you dance. Quick, start dancing!");
                     speak(coveInstructions);
                     coveText.setText(coveInstructions);
-                    coveSound = new MediaPlayer().create(CoveScreen.this, R.raw.sandstorm);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }

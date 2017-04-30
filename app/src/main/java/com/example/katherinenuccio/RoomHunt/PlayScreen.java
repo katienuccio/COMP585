@@ -117,6 +117,9 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     Log.e("TTS", "Initialization Succeeded");
                     speak(mainInstructions);
                     mainText.setText(mainInstructions);
+                    if (flags.get("exploreMode")) {
+                        mainInstructions = "Resume exploring";
+                    }
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }
@@ -125,9 +128,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 }
             }
         });
-
-        Log.d("Flags Begin", flags.toString());
-
 
         // Main game code.
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
@@ -144,6 +144,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 // Go to dance party!
                                 Intent coveIntent = new Intent(PlayScreen.this, CoveScreen.class);
                                 coveIntent.putExtra("flags", flags);
+                                coveIntent.putExtra("instructions", mainInstructions);
                                 startActivity(coveIntent);
                             }
                         case "Beach":
@@ -425,12 +426,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     mainInstructions = ("You did it! I don't know how we can ever repay you.");
                     speak(mainInstructions);
                     mainText.setText(mainInstructions);
-                    int count = 0;
-                    while(count < 5) {
-                        speak("Love me");
-                        count++;
-                    }
-
                     flags.put("gameDone", true);
                 }
             }
