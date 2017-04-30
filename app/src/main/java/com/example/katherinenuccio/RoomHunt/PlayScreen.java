@@ -2,6 +2,7 @@ package com.example.katherinenuccio.RoomHunt;
 
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -127,6 +128,16 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     Log.e("TTS", "Initialization Failed");
                 }
             }
+        });
+
+        ConstraintLayout rlayout = (ConstraintLayout) findViewById(R.id.playscreenlayout);
+        rlayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                speak(mainInstructions);
+            }
+
         });
 
         // Main game code.
