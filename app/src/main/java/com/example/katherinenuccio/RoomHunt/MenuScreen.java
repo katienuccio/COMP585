@@ -42,6 +42,7 @@ public class MenuScreen extends AppCompatActivity implements View.OnClickListene
         flags.put("appleDone", false);
         flags.put("swordDone", false);
         flags.put("dragonDone", false);
+        flags.put("coveDone", false);
         flags.put("gameDone", false);
         flags.put("cheats", false);
 

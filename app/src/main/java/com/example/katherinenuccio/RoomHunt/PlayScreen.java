@@ -38,6 +38,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         placesByBeacons.put("1:2","Forest");
         placesByBeacons.put("2:1", "Town");
         placesByBeacons.put("2:2", "Mountains");
+        placesByBeacons.put("2:3", "Cove");
         PLACES_BY_BEACONS = Collections.unmodifiableMap(placesByBeacons);
     }
 
@@ -138,6 +139,13 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     TextView newText = (TextView) findViewById(R.id.roomName);
 
                     switch(places){
+                        case "Cove":
+                            if (!flags.get("exploreMode") && !flags.get("coveDone")) {
+                                // Go to dance party!
+                                Intent coveIntent = new Intent(PlayScreen.this, CoveScreen.class);
+                                coveIntent.putExtra("flags", flags);
+                                startActivity(coveIntent);
+                            }
                         case "Beach":
                             if (roomSound == null) {
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.ocean);
