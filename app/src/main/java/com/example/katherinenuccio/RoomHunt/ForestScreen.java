@@ -135,12 +135,13 @@ public class ForestScreen extends AppCompatActivity {
 
     // Text to speech code. For deprecation/compatibility purposes.
     private void speak(String text) {
+        while(tts.isSpeaking()){/*Do Nothing*/}
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
-        while(tts.isSpeaking()){/*Do Nothing*/}
+
     }
 
     @Override

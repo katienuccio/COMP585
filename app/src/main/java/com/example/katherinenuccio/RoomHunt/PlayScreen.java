@@ -159,6 +159,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 coveIntent.putExtra("instructions", mainInstructions);
                                 startActivity(coveIntent);
                             }
+                            break;
                         case "Beach":
                             if (roomSound == null) {
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.ocean);
@@ -332,12 +333,13 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
     // Text to speech code. For deprecation/compatibility purposes.
     private void speak(String text) {
         // Should've done this with ! and not use the else. Oh well.
+        while(tts.isSpeaking()){/*Do Nothing*/}
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
-        while(tts.isSpeaking()){/*Do Nothing*/}
+
 
     }
     @Override
