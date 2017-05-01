@@ -68,6 +68,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
     // Other
     private TextView mainText;
     private String mainInstructions;
+    private int mS, fS, bS, tS = 0;
 
     // Logic to flag game progression properly
     // This helps us not repeat mini-games or give a player the same quest over and over
@@ -175,6 +176,14 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                     beachIntent.putExtra("flags", flags);
                                     startActivity(beachIntent);
                                 }
+                            } else {
+                                if(bS == 0){
+                                    mainInstructions = "You've reached the beach. You can hear waves crashing in the distance!";
+                                    speak(mainInstructions);
+                                    mainText.setText(mainInstructions);
+                                    bS = 1;
+                                }
+
                             }
                             pauseMediaPlayer();
                             flags.put("visitBeach", true);
@@ -197,6 +206,13 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                     startActivity(forestIntent);
 
                                 }
+                            } else {
+                                if(fS == 0) {
+                                    mainInstructions = "You've reached the forest. Birds are chirping, and you smell apple trees all around you";
+                                    speak(mainInstructions);
+                                    mainText.setText(mainInstructions);
+                                    fS = 1;
+                                }
                             }
                             pauseMediaPlayer();
                             flags.put("visitForest", true);
@@ -215,37 +231,39 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 // Switch to the town dialogues
                                 if (!flags.get("applePicking")){
                                     // Dialogue to tell player to go pick apples
-                                    mainInstructions = ("Greetings explorer! Would you mind going to the forest and picking some apples for us? We're running out of food!");
+                                    mainInstructions = ("The village elder greets you with a sad look on her face. She tells you that their village has recently been attacked by the mighty, yodeling dragon. This dragon, who they call Yodelo, has destroyed their food supplies. The elder asks you to please go to the forest and retrieve some apples.");
                                     speak(mainInstructions);
                                     mainText.setText(mainInstructions);
                                     flags.put("applePicking", true);
                                 }
                                 else if (flags.get("appleDone") && !flags.get("duneDigging")){
                                     // Dialogue to tell player to go get sword at beach
-                                    mainInstructions = ("Welcome back! Thanks for getting some apples, you should go to the beach and find the sword of legends!");
+                                    mainInstructions = ("As you return to the village, the elder looks at the number of apples you retrieved and says thank you. She looks at you for a while before telling you about a hero of legends, who will one day arrive and slay the mighty Yodelo. You are told about the hero's sword, which is hidden somewhere in the beach.");
                                     speak(mainInstructions);
                                     mainText.setText(mainInstructions);
                                     flags.put("duneDigging", true);
                                 }
                                 else if (flags.get("swordDone") && !flags.get("bossBeating")){
                                     // Dialogue to tell player to go fight dragon
-                                    mainInstructions = ("Wow, you got the sword! You really are the hero of legends! Quickly, go to the mountain and slay the dragon!");
+                                    mainInstructions = ("As you return to village with the sword, the elder looks at you in amazement. The elder tells you that in order to awaken the sword, you must point it at the dragon and yell 'I HAVE THE POWER'. Go to the mountains now and slay Yodelo.");
                                     speak(mainInstructions);
                                     mainText.setText(mainInstructions);
                                     flags.put("bossBeating", true);
                                 }
                                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                                     // Dialogue to tell player congratulations
-                                    mainInstructions = ("You did it! I don't know how we can ever repay you.");
+                                    mainInstructions = ("When you return to village, the village elder thanks you for all that you have done. Congratulations on slaying the mighty Yodelo!");
                                     speak(mainInstructions);
                                     mainText.setText(mainInstructions);
-                                    int count = 0;
-                                    while(count < 5) {
-                                        speak("Love me");
-                                        count++;
-                                    }
 
                                     flags.put("gameDone", true);
+                                }
+                            } else {
+                                if(tS == 0) {
+                                    mainInstructions = "You've arrived at a village. The bells are ringing, and people are hurrying all around you.";
+                                    speak(mainInstructions);
+                                    mainText.setText(mainInstructions);
+                                    tS = 1;
                                 }
                             }
                             pauseMediaPlayer();
@@ -267,6 +285,13 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                     Intent mountainIntent = new Intent(PlayScreen.this, MountainScreen.class);
                                     mountainIntent.putExtra("flags", flags);
                                     startActivity(mountainIntent);
+                                }
+                            } else {
+                                if(mS == 0) {
+                                    mainInstructions = "You've arrived at the mountains. You hear ominous yodeling noises coming from the peaks.";
+                                    speak(mainInstructions);
+                                    mainText.setText(mainInstructions);
+                                    mS = 1;
                                 }
                             }
                             pauseMediaPlayer();
@@ -306,11 +331,14 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
 
     // Text to speech code. For deprecation/compatibility purposes.
     private void speak(String text) {
+        // Should've done this with ! and not use the else. Oh well.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
+        while(tts.isSpeaking()){/*Do Nothing*/}
+
     }
     @Override
     protected void onResume() {
@@ -353,6 +381,13 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     beachIntent.putExtra("flags", flags);
                     startActivity(beachIntent);
                 }
+            } else {
+                if (bS == 0) {
+                    mainInstructions = "You've reached the beach. You can hear waves crashing in the distance!";
+                    speak(mainInstructions);
+                    mainText.setText(mainInstructions);
+                    bS = 1;
+                }
             }
             pauseMediaPlayer();
             flags.put("visitBeach", true);
@@ -373,6 +408,13 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     forestIntent.putExtra("flags", flags);
                     startActivity(forestIntent);
 
+                }
+            } else {
+                if (fS == 0) {
+                    mainInstructions = "You've reached the forest. Birds are chirping, and you smell apple trees all around you";
+                    speak(mainInstructions);
+                    mainText.setText(mainInstructions);
+                    fS = 1;
                 }
             }
             pauseMediaPlayer();
@@ -395,6 +437,13 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     mountainIntent.putExtra("flags", flags);
                     startActivity(mountainIntent);
                 }
+            } else {
+                if (mS == 0) {
+                    mainInstructions = "You've arrived at the mountains. You hear ominous yodeling noises coming from the peaks.";
+                    speak(mainInstructions);
+                    mainText.setText(mainInstructions);
+                    mS = 1;
+                }
             }
             pauseMediaPlayer();
             flags.put("visitMountain", true);
@@ -413,31 +462,39 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 // Switch to the town dialogues
                 if (!flags.get("applePicking")){
                     // Dialogue to tell player to go pick apples
-                    mainInstructions = ("Greetings explorer! Would you mind going to the forest and picking some apples for us? We're running out of food!");
+                    mainInstructions = ("The village elder greets you with a sad look on her face. She tells you that their village has recently been attacked by the mighty, yodeling dragon. This dragon, who they call Yodelo, has destroyed their food supplies. The elder asks you to please go to the forest and retrieve some apples.");
                     speak(mainInstructions);
                     mainText.setText(mainInstructions);
                     flags.put("applePicking", true);
                 }
                 else if (flags.get("appleDone") && !flags.get("duneDigging")){
                     // Dialogue to tell player to go get sword at beach
-                    mainInstructions = ("Welcome back! Thanks for getting some apples, you should go to the beach and find the sword of legends!");
+                    mainInstructions = ("As you return to the village, the elder looks at the number of apples you retrieved and says thank you. She looks at you for a while before telling you about a hero of legends, who will one day arrive and slay the mighty Yodelo. You are told about the hero's sword, which is hidden somewhere in the beach.");
                     speak(mainInstructions);
                     mainText.setText(mainInstructions);
                     flags.put("duneDigging", true);
                 }
                 else if (flags.get("swordDone") && !flags.get("bossBeating")){
                     // Dialogue to tell player to go fight dragon
-                    mainInstructions = ("Wow, you got the sword! You really are the hero of legends! Quickly, go to the mountain and slay the dragon!");
+                    mainInstructions = ("As you return to the village with the sword, the elder looks at you in amazement. The elder tells you that in order to awaken the sword, you must point it at the dragon and yell 'I HAVE THE POWER'. Go to the mountains now and slay Yodelo.");
                     speak(mainInstructions);
                     mainText.setText(mainInstructions);
                     flags.put("bossBeating", true);
                 }
                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                     // Dialogue to tell player congratulations
-                    mainInstructions = ("You did it! I don't know how we can ever repay you.");
+                    mainInstructions = ("When you return to the village, the village elder thanks you for all that you have done. Congratulations on slaying the mighty Yodelo!");
                     speak(mainInstructions);
                     mainText.setText(mainInstructions);
+
                     flags.put("gameDone", true);
+                }
+            } else {
+                if (tS == 0) {
+                    mainInstructions = "You've arrived at a village. The bells are ringing, and people are hurrying all around you.";
+                    speak(mainInstructions);
+                    mainText.setText(mainInstructions);
+                    tS = 1;
                 }
             }
             pauseMediaPlayer();

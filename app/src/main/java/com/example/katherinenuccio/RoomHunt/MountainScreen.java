@@ -41,7 +41,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         flags.put("dragonDone", true);
         instructions = new HashMap<String, String>();
-        instructions.put("instructions", "Return to town");
+        instructions.put("instructions", "Return to the village");
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -49,8 +49,8 @@ public class MountainScreen extends Activity implements RecognitionListener {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    returnedText.setText("Welcome to the Mountain. Tap the screen and say I have the power to slay the dragon.");
-                    speak("Welcome to the Mountain. Tap the screen and say I have the power to slay the dragon.");
+                    returnedText.setText("You've arrived at Yodelo's lair. Tap the screen and shout the magic phrase to slay Yodelo. Remember, the phrase is 'I HAVE THE POWER'.");
+                    speak("You've arrived at Yodelo's lair. Tap the screen and shout the magic phrase to slay Yodelo. Remember, the phrase is 'I HAVE THE POWER'.");
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }
@@ -204,6 +204,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
+        while(tts.isSpeaking()){/*Do Nothing*/}
     }
 
     public static String getErrorText(int errorCode) {

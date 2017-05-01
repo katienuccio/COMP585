@@ -41,14 +41,14 @@ public class BeachScreen extends AppCompatActivity  {
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         instructions = new HashMap<String, String>();
         flags.put("swordDone", true);
-        instructions.put("instructions", "Return to town");
+        instructions.put("instructions", "Return to the village");
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    beachInstructions = ("Welcome to the Beach. Dig with your phone to find the sword of legends.");
+                    beachInstructions = ("You return to the beach. You're not sure where the sword may be hidden, so you just pick a spot and begin digging. Use your phone to dig for the sword.");
                     speak(beachInstructions);
                     beachText.setText(beachInstructions);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -84,20 +84,20 @@ public class BeachScreen extends AppCompatActivity  {
     }
 
     private void handleShakeEvent(int count) {
-        if(totalShakes >= 10) {
-            beachInstructions = ("You did it!");
+        if(totalShakes >= 16) {
+            beachInstructions = ("You got it! The sword of legends is now yours!");
             speak(beachInstructions);
             beachText.setText(beachInstructions);
             swordDone();
         } else {
             totalShakes++;
             if(totalShakes == 3){
-                beachInstructions = ("You see something in the sand! Keep digging.");
+                beachInstructions = ("You begin to feel something sharp in the sand! Keep digging.");
                 speak(beachInstructions);
                 beachText.setText(beachInstructions);
             }
-            if(totalShakes == 8){
-                beachInstructions = ("You're almost there!");
+            if(totalShakes == 10){
+                beachInstructions = ("You can feel most of the sword now. Keep digging, you're almost there!");
                 speak(beachInstructions);
                 beachText.setText(beachInstructions);
             }
@@ -134,6 +134,7 @@ public class BeachScreen extends AppCompatActivity  {
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
+        while(tts.isSpeaking()){/*Do Nothing*/}
     }
 
     @Override
