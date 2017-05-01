@@ -2,8 +2,12 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/forestscreenlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.example.katherinenuccio.RoomHunt.ForestScreen">
 
 
@@ -17,8 +21,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
-    <ImageButton
-        android:id="@+id/appleButton"
+    <ImageView
+        android:id="@+id/apple"
         android:layout_width="372dp"
         android:layout_height="309dp"
         android:layout_marginLeft="8dp"
@@ -33,10 +37,10 @@
 
     <TextView
         android:id="@+id/instructionsForest"
-        android:layout_width="278dp"
-        android:layout_height="61dp"
-        android:layout_marginLeft="53dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="336dp"
+        android:layout_height="87dp"
+        android:layout_marginLeft="31dp"
+        android:layout_marginTop="10dp"
         android:text="Instructions:"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
@@ -56,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="105dp"
-        android:layout_marginTop="338dp"
+        android:layout_marginTop="328dp"
         android:text="Message:"
         android:textAppearance="@android:style/TextAppearance.Material.Menu"
         android:textColor="@color/colorPrimaryDark"

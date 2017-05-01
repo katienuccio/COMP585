@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +18,8 @@ import java.util.HashMap;
 import java.util.Locale;
 
 
-public class ForestScreen extends AppCompatActivity implements View.OnClickListener {
+public class ForestScreen extends AppCompatActivity {
 
-    private ImageButton appleButton;
     private TextView newText, instructionText, timeLeft;
     private HashMap<String, Boolean> flags;
     private HashMap<String, String> instructions;
@@ -35,11 +35,10 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
         flags = (HashMap<String, Boolean>)intent.getSerializableExtra("flags");
         instructions = new HashMap<String, String>();
         flags.put("appleDone", true);
-        instructions.put("instructions", "Return to town");
+        instructions.put("instructions", "Return to the village");
         newText = (TextView) findViewById(R.id.totalClicks);
         instructionText = (TextView) findViewById(R.id.instructionsForest);
         timeLeft = (TextView) findViewById(R.id.timeID);
-        appleButton = (ImageButton) findViewById(R.id.appleButton);
 
         // Text to Speech
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -48,7 +47,7 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    String instructionsText = "Welcome to the Forest. Tap the screen to gather as many apples as you can, but hurry! We don't have much time. Tap to Begin!";
+                    String instructionsText = "You've returned to the Forest. You feel a mighty breeze shake the trees and tons of apples fall to the ground. Tap the screen to gather as many apples as you can, but hurry, we don't have much time before the animals get it. Tap to Begin!";
                     instructionText.setText(instructionsText);
                     speak(instructionsText);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -59,28 +58,28 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+        final ConstraintLayout rlayout = (ConstraintLayout) findViewById(R.id.forestscreenlayout);
+        rlayout.setOnClickListener(new View.OnClickListener() {
 
-
-
-        // Buttons
-        appleButton.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view == appleButton) {
-            if (counter == -1) {
-                startTimer();
-                counter++;
-            } else {
-                counter++;
-                newText.setText("Apples Picked: " + counter);
+            @Override
+            public void onClick(View v) {
+                if (counter == -1) {
+                    startTimer();
+                    counter++;
+                } else {
+                    counter++;
+                    newText.setText("Apples Picked: " + counter);
+                }
+                rlayout.playSoundEffect(SoundEffectConstants.CLICK);
+                rlayout.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             }
 
-        }
-        view.playSoundEffect(SoundEffectConstants.CLICK);
-        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+        });
+
+
     }
+
+
 
     private void appleDone() {
         Intent i = new Intent(this, PlayScreen.class);
@@ -136,11 +135,13 @@ public class ForestScreen extends AppCompatActivity implements View.OnClickListe
 
     // Text to speech code. For deprecation/compatibility purposes.
     private void speak(String text) {
+        while(tts.isSpeaking()){/*Do Nothing*/}
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
+
     }
 
     @Override

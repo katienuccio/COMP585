@@ -55,7 +55,7 @@ public class CoveScreen extends AppCompatActivity  {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    coveInstructions = ("You stumbled upon some hidden treasure! The only way it will open is if you dance. Quick, start dancing!");
+                    coveInstructions = ("You stumbled upon some hidden treasure! The only way to open the treasure is to start dancing. Quick, start dancing!");
                     speak(coveInstructions);
                     coveText.setText(coveInstructions);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -92,20 +92,20 @@ public class CoveScreen extends AppCompatActivity  {
     }
 
     private void handleShakeEvent(int count) {
-        if(totalShakes >= 15) {
-            coveInstructions = ("You did it!");
+        if(totalShakes >= 20) {
+            coveInstructions = ("That's it! The chest is fully open. Way to go, take a piece of candy!");
             speak(coveInstructions);
             coveText.setText(coveInstructions);
             coveDone();
         } else {
             totalShakes++;
-            if(totalShakes == 4){
-                coveInstructions = ("The chest is beginning to open. Keep it up!");
+            if(totalShakes == 5){
+                coveInstructions = ("The chest starts to shake to the beat of the music. You're doing great, keep it up!");
                 speak(coveInstructions);
                 coveText.setText(coveInstructions);
             }
-            if(totalShakes == 10){
-                coveInstructions = ("You can see gold coins glittering inside the chest! You're almost there!");
+            if(totalShakes == 13){
+                coveInstructions = ("You hear the chest begin to creak open. Keep dancing and the treasure will be yours!");
                 speak(coveInstructions);
                 coveText.setText(coveInstructions);
             }
@@ -140,11 +140,13 @@ public class CoveScreen extends AppCompatActivity  {
 
     // Text to speech code. For deprecation/compatibility purposes.
     private void speak(String text) {
+        while(tts.isSpeaking()){/*Do Nothing*/}
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
+
     }
 
     @Override
