@@ -32,14 +32,15 @@
                 android:value="com.example.katherinenuccio.RoomHunt.MenuScreen" />
             />
         </activity>
+        
         <activity android:name=".ForestScreen"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity android:name=".BeachScreen"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity android:name=".MountainScreen"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity android:name=".CoveScreen"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

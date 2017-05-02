@@ -13,6 +13,7 @@ import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.estimote.sdk.Beacon;
@@ -37,7 +38,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         Map<String, String> placesByBeacons = new HashMap<>();
         placesByBeacons.put("1:1", "Beach");
         placesByBeacons.put("1:2","Forest");
-        placesByBeacons.put("2:1", "Town");
+        placesByBeacons.put("2:1", "Village");
         placesByBeacons.put("2:2", "Mountains");
         placesByBeacons.put("2:3", "Cove");
         PLACES_BY_BEACONS = Collections.unmodifiableMap(placesByBeacons);
@@ -54,6 +55,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
 
     // Cheat Buttons
     private Button beachButton, mountainButton, forestButton, townButton;
+    private ImageButton instructionButton;
 
     // Variables to make beacons work
     private BeaconManager beaconManager;
@@ -61,13 +63,13 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
 
     // Variables for sound, including text to speech
     private MediaPlayer roomSound;
-    private String currSound = "beach";
+    private String currSound = "";
     private String newSound;
     private TextToSpeech tts;
 
     // Other
     private TextView mainText;
-    private String mainInstructions;
+    private String mainInstructions, roomSpeech;
     private int mS, fS, bS, tS = 0;
 
     // Logic to flag game progression properly
@@ -94,6 +96,8 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         mountainButton.setOnClickListener(this);
         townButton = (Button) findViewById(R.id.town_button);
         townButton.setOnClickListener(this);
+        instructionButton = (ImageButton) findViewById(R.id.speechButton);
+        instructionButton.setOnClickListener(this);
 
         flags = new HashMap<String, Boolean>();
         instructions = new HashMap<String, String>();
@@ -107,6 +111,9 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 }
                 instructions = (HashMap<String, String>) intent.getSerializableExtra("instructions");
                 mainInstructions = instructions.get("instructions");
+                if(!flags.get("exploreMode")){
+                    bS = 1; fS = 1; mS = 1; tS = 1;
+                }
             }
             catch (Exception ex){
             }
@@ -118,7 +125,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
                     speak(mainInstructions);
-                    mainText.setText(mainInstructions);
                     if (flags.get("exploreMode")) {
                         mainInstructions = "Resume exploring";
                     }
@@ -131,15 +137,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
             }
         });
 
-        ConstraintLayout rlayout = (ConstraintLayout) findViewById(R.id.playscreenlayout);
-        rlayout.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                speak(mainInstructions);
-            }
-
-        });
 
         // Main game code.
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
@@ -152,8 +150,9 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
 
                     switch(places){
                         case "Cove":
-                            if (!flags.get("coveDone")) {
+                            if (!flags.get("coveDone") && flags.get("appleDone")) {
                                 // Go to dance party!
+
                                 Intent coveIntent = new Intent(PlayScreen.this, CoveScreen.class);
                                 coveIntent.putExtra("flags", flags);
                                 coveIntent.putExtra("instructions", mainInstructions);
@@ -161,6 +160,9 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                             }
                             break;
                         case "Beach":
+                            newSound = "beach";
+                            pauseMediaPlayer();
+                            checkRoom();
                             if (roomSound == null) {
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.ocean);
                                 roomSound.setLooping(true);
@@ -169,7 +171,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.ocean);
                                 roomSound.start();
                             }
-                            newSound = "beach";
+
                             if (!flags.get("exploreMode")) {
                                 if ((flags.get("duneDigging") && !flags.get("swordDone")) || flags.get("cheats")) {
                                     // Switch to beach minigame
@@ -181,15 +183,20 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 if(bS == 0){
                                     mainInstructions = "You've reached the beach. You can hear waves crashing in the distance!";
                                     speak(mainInstructions);
-                                    mainText.setText(mainInstructions);
-                                    bS = 1;
+                                    roomSpeech = "You're at the beach";
+                                    mainInstructions = "Resume Exploring";
+                                    bS = 2;
+                                    if(fS == 2){fS = 1;}
+                                    if(mS == 2){mS = 1;}
+                                    if(tS == 2){tS = 1;}
                                 }
-
                             }
-                            pauseMediaPlayer();
                             flags.put("visitBeach", true);
                             break;
                         case "Forest":
+                            newSound = "forest";
+                            pauseMediaPlayer();
+                            checkRoom();
                             if (roomSound == null) {
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.forest);
                                 roomSound.setLooping(true);
@@ -198,7 +205,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.forest);
                                 roomSound.start();
                             }
-                            newSound = "forest";
+
                             if (!flags.get("exploreMode")) {
                                 if ((flags.get("applePicking") && !flags.get("appleDone")) || flags.get("cheats")){
                                     // Switch to the forest minigame
@@ -209,16 +216,22 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 }
                             } else {
                                 if(fS == 0) {
-                                    mainInstructions = "You've reached the forest. Birds are chirping, and you smell apple trees all around you";
+                                    mainInstructions = "You've reached the forest. Birds are chirping and you begin to smell apple trees.";
                                     speak(mainInstructions);
-                                    mainText.setText(mainInstructions);
-                                    fS = 1;
+                                    roomSpeech = "You're at the forest";
+                                    mainInstructions = "Resume Exploring";
+                                    fS = 2;
+                                    if(bS == 2){bS = 1;}
+                                    if(mS == 2){mS = 1;}
+                                    if(tS == 2){tS = 1;}
                                 }
                             }
-                            pauseMediaPlayer();
                             flags.put("visitForest", true);
                             break;
-                        case "Town":
+                        case "Village":
+                            newSound = "village";
+                            pauseMediaPlayer();
+                            checkRoom();
                             if (roomSound == null) {
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.town);
                                 roomSound.setLooping(true);
@@ -227,28 +240,33 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.town);
                                 roomSound.start();
                             }
-                            newSound = "town";
                             if (!flags.get("exploreMode")) {
                                 // Switch to the town dialogues
                                 if (!flags.get("applePicking")){
                                     // Dialogue to tell player to go pick apples
                                     mainInstructions = ("The village elder greets you with a sad look on her face. She tells you that their village has recently been attacked by the mighty, yodeling dragon. This dragon, who they call Yodelo, has destroyed their food supplies. The elder asks you to please go to the forest and retrieve some apples.");
                                     speak(mainInstructions);
+                                    mainInstructions = "Go to the forest and grab some apples";
                                     mainText.setText(mainInstructions);
+
                                     flags.put("applePicking", true);
                                 }
                                 else if (flags.get("appleDone") && !flags.get("duneDigging")){
                                     // Dialogue to tell player to go get sword at beach
                                     mainInstructions = ("As you return to the village, the elder looks at the number of apples you retrieved and says thank you. She looks at you for a while before telling you about a hero of legends, who will one day arrive and slay the mighty Yodelo. You are told about the hero's sword, which is hidden somewhere in the beach.");
                                     speak(mainInstructions);
+                                    mainInstructions = "Go to the beach and find the sword";
                                     mainText.setText(mainInstructions);
+
                                     flags.put("duneDigging", true);
                                 }
                                 else if (flags.get("swordDone") && !flags.get("bossBeating")){
                                     // Dialogue to tell player to go fight dragon
-                                    mainInstructions = ("As you return to village with the sword, the elder looks at you in amazement. The elder tells you that in order to awaken the sword, you must point it at the dragon and yell 'I HAVE THE POWER'. Go to the mountains now and slay Yodelo.");
+                                    mainInstructions = ("As you return to the village with the sword, the elder looks at you in amazement. The elder tells you that in order to awaken the sword, you must point it at the dragon and yell 'I HAVE THE POWER'. Go to the mountains now and slay Yodelo.");
                                     speak(mainInstructions);
+                                    mainInstructions = "Go to the mountains and defeat Yodelo";
                                     mainText.setText(mainInstructions);
+
                                     flags.put("bossBeating", true);
                                 }
                                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
@@ -256,21 +274,26 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                     mainInstructions = ("When you return to village, the village elder thanks you for all that you have done. Congratulations on slaying the mighty Yodelo!");
                                     speak(mainInstructions);
                                     mainText.setText(mainInstructions);
-
                                     flags.put("gameDone", true);
                                 }
                             } else {
                                 if(tS == 0) {
                                     mainInstructions = "You've arrived at a village. The bells are ringing, and people are hurrying all around you.";
                                     speak(mainInstructions);
-                                    mainText.setText(mainInstructions);
-                                    tS = 1;
+                                    roomSpeech = "You're at the village";
+                                    mainInstructions = "Resume Exploring";
+                                    tS = 2;
+                                    if(fS == 2){fS = 1;}
+                                    if(mS == 2){mS = 1;}
+                                    if(bS == 2){bS = 1;}
                                 }
                             }
-                            pauseMediaPlayer();
-                            flags.put("visitTown", true);
+                            flags.put("visitVillage", true);
                             break;
                         case "Mountains":
+                            newSound = "mountain";
+                            pauseMediaPlayer();
+                            checkRoom();
                             if (roomSound == null) {
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.mountain);
                                 roomSound.setLooping(true);
@@ -279,7 +302,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.mountain);
                                 roomSound.start();
                             }
-                            newSound = "mountain";
+
                             if (!flags.get("exploreMode")) {
                                 if ((flags.get("bossBeating") && !flags.get("dragonDone")) || flags.get("cheats")) {
                                     // Switch to dragon minigame
@@ -291,18 +314,28 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 if(mS == 0) {
                                     mainInstructions = "You've arrived at the mountains. You hear ominous yodeling noises coming from the peaks.";
                                     speak(mainInstructions);
-                                    mainText.setText(mainInstructions);
-                                    mS = 1;
+                                    mainInstructions = "Resume Exploring";
+                                    roomSpeech = "You're at the mountains";
+                                    mS = 2;
+                                    if(fS == 2){fS = 1;}
+                                    if(bS == 2){bS = 1;}
+                                    if(tS == 2){tS = 1;}
                                 }
                             }
-                            pauseMediaPlayer();
+
+
                             flags.put("visitMountain", true);
                             break;
                     }
 
                     // This sets the explore mode to false so that we can begin giving quests
-                    if (flags.get("visitBeach") && flags.get("visitForest") && flags.get("visitMountain") && flags.get("visitTown")) {
+                    if (flags.get("visitBeach") && flags.get("visitForest") && flags.get("visitMountain") && flags.get("visitVillage") && flags.get("exploreMode")) {
                         flags.put("exploreMode", false);
+                        if(!places.equals("town")){
+                            speak("Return to the village");
+                            mainInstructions = "Return to the village";
+                            mainText.setText(mainInstructions);
+                        }
                     }
 
                     // This could be removed, mainly used to make sure beacon switching is working.
@@ -319,8 +352,11 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
     // This allows us to stop the current sound and begin a new one, only if it's
     // a different sound. This prevents a sound from constantly looping at the 00:01 mark.
     protected void pauseMediaPlayer() {
+        Log.d("SOUND", "Where" + newSound + currSound);
         if (roomSound != null){
+            Log.d("SOUND", "There" + newSound + currSound);
             if (!currSound.equals(newSound)) {
+                Log.d("SOUND", "Here" + newSound + currSound);
                 currSound = newSound;
                 roomSound.stop();
                 roomSound.reset();
@@ -332,6 +368,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
 
     // Text to speech code. For deprecation/compatibility purposes.
     private void speak(String text) {
+        mainText.setText(mainInstructions);
         // Should've done this with ! and not use the else. Oh well.
         while(tts.isSpeaking()){/*Do Nothing*/}
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -339,13 +376,12 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         } else {
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
-
+        while(tts.isSpeaking()){/*Do Nothing*/}
 
     }
     @Override
     protected void onResume() {
         super.onResume();
-
         SystemRequirementsChecker.checkWithDefaultDialogs(this);
 
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
@@ -358,15 +394,22 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
 
     @Override
     protected void onPause() {
+
         beaconManager.stopRanging(region);
 
         super.onPause();
+        roomSound.pause();
     }
 
     public void onClick(View view) {
         view.playSoundEffect(SoundEffectConstants.CLICK);
         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+        if (view == instructionButton) {speak(mainInstructions);}
         if (view == beachButton) {
+            newSound = "beach";
+            pauseMediaPlayer();
+            checkRoom();
+            Log.d("BEACH", "bS " + bS + "; fS " + fS + "; mS " + mS + "; tS " + tS);
             if (roomSound == null) {
                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.ocean);
                 roomSound.setLooping(true);
@@ -375,7 +418,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.ocean);
                 roomSound.start();
             }
-            newSound = "beach";
             if (!flags.get("exploreMode")) {
                 if ((flags.get("duneDigging") && !flags.get("swordDone")) || flags.get("cheats")) {
                     // Switch to beach minigame
@@ -384,16 +426,22 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     startActivity(beachIntent);
                 }
             } else {
-                if (bS == 0) {
+                if(bS == 0){
                     mainInstructions = "You've reached the beach. You can hear waves crashing in the distance!";
                     speak(mainInstructions);
-                    mainText.setText(mainInstructions);
-                    bS = 1;
+                    roomSpeech = "You're at the beach";
+                    mainInstructions = "Resume exploring";
+                    bS = 2;
+                    if(fS == 2){fS = 1;}
+                    if(mS == 2){mS = 1;}
+                    if(tS == 2){tS = 1;}
                 }
             }
-            pauseMediaPlayer();
             flags.put("visitBeach", true);
         } else if(view == forestButton){
+            newSound = "forest";
+            pauseMediaPlayer();
+            checkRoom();
             if (roomSound == null) {
                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.forest);
                 roomSound.setLooping(true);
@@ -402,7 +450,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.forest);
                 roomSound.start();
             }
-            newSound = "forest";
             if (!flags.get("exploreMode")) {
                 if ((flags.get("applePicking") && !flags.get("appleDone")) || flags.get("cheats")){
                     // Switch to the forest minigame
@@ -412,17 +459,23 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
 
                 }
             } else {
-                if (fS == 0) {
-                    mainInstructions = "You've reached the forest. Birds are chirping, and you smell apple trees all around you";
+                if(fS == 0) {
+                    mainInstructions = "You've reached the forest. Birds are chirping and you begin to smell apple trees.";
                     speak(mainInstructions);
-                    mainText.setText(mainInstructions);
-                    fS = 1;
+                    roomSpeech = "You're at the forest";
+                    mainInstructions = "Resume exploring";
+                    fS = 2;
+                    if(bS == 2){bS = 1;}
+                    if(mS == 2){mS = 1;}
+                    if(tS == 2){tS = 1;}
                 }
             }
-            pauseMediaPlayer();
             flags.put("visitForest", true);
         }
         else if(view == mountainButton){
+            newSound = "mountain";
+            pauseMediaPlayer();
+            checkRoom();
             if (roomSound == null) {
                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.mountain);
                 roomSound.setLooping(true);
@@ -431,7 +484,6 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.mountain);
                 roomSound.start();
             }
-            newSound = "mountain";
             if (!flags.get("exploreMode")) {
                 if ((flags.get("bossBeating") && !flags.get("dragonDone")) || flags.get("cheats")) {
                     // Switch to dragon minigame
@@ -440,17 +492,23 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     startActivity(mountainIntent);
                 }
             } else {
-                if (mS == 0) {
+                if(mS == 0) {
                     mainInstructions = "You've arrived at the mountains. You hear ominous yodeling noises coming from the peaks.";
                     speak(mainInstructions);
-                    mainText.setText(mainInstructions);
-                    mS = 1;
+                    roomSpeech = "You're at the mountains";
+                    mainInstructions = "Resume exploring";
+                    mS = 2;
+                    if(fS == 2){fS = 1;}
+                    if(bS == 2){bS = 1;}
+                    if(tS == 2){tS = 1;}
                 }
             }
-            pauseMediaPlayer();
             flags.put("visitMountain", true);
         }
         else if(view == townButton){
+            newSound = "village";
+            pauseMediaPlayer();
+            checkRoom();
             if (roomSound == null) {
                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.town);
                 roomSound.setLooping(true);
@@ -459,52 +517,64 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                 roomSound = new MediaPlayer().create(PlayScreen.this, R.raw.town);
                 roomSound.start();
             }
-            newSound = "town";
             if (!flags.get("exploreMode")) {
                 // Switch to the town dialogues
                 if (!flags.get("applePicking")){
                     // Dialogue to tell player to go pick apples
                     mainInstructions = ("The village elder greets you with a sad look on her face. She tells you that their village has recently been attacked by the mighty, yodeling dragon. This dragon, who they call Yodelo, has destroyed their food supplies. The elder asks you to please go to the forest and retrieve some apples.");
                     speak(mainInstructions);
+                    mainInstructions = "Go to the forest and grab some apples";
                     mainText.setText(mainInstructions);
+
                     flags.put("applePicking", true);
                 }
                 else if (flags.get("appleDone") && !flags.get("duneDigging")){
                     // Dialogue to tell player to go get sword at beach
-                    mainInstructions = ("As you return to the village, the elder looks at the number of apples you retrieved and says thank you. She looks at you for a while before telling you about a hero of legends, who will one day arrive and slay the mighty Yodelo. You are told about the hero's sword, which is hidden somewhere in the beach.");
+                    mainInstructions = ("As you return, the elder looks at the number of apples you retrieved and says thank you. She looks at you for a while before telling you about a hero of legends, who will one day arrive and slay the mighty Yodelo. You are told about the hero's sword, which is hidden somewhere in the beach.");
                     speak(mainInstructions);
+                    mainInstructions = "Go to the beach and find the sword";
                     mainText.setText(mainInstructions);
+
                     flags.put("duneDigging", true);
                 }
                 else if (flags.get("swordDone") && !flags.get("bossBeating")){
                     // Dialogue to tell player to go fight dragon
-                    mainInstructions = ("As you return to the village with the sword, the elder looks at you in amazement. The elder tells you that in order to awaken the sword, you must point it at the dragon and yell 'I HAVE THE POWER'. Go to the mountains now and slay Yodelo.");
+                    mainInstructions = ("As you return with the sword, the elder looks at you in amazement. The elder tells you that in order to awaken the sword, you must point it at the dragon and yell 'I HAVE THE POWER'. Go to the mountains now and slay Yodelo.");
                     speak(mainInstructions);
+                    mainInstructions = "Go to the mountains and defeat Yodelo";
                     mainText.setText(mainInstructions);
+
                     flags.put("bossBeating", true);
                 }
                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                     // Dialogue to tell player congratulations
-                    mainInstructions = ("When you return to the village, the village elder thanks you for all that you have done. Congratulations on slaying the mighty Yodelo!");
+                    mainInstructions = ("The village elder thanks you for all that you have done. Congratulations on slaying the mighty Yodelo!");
                     speak(mainInstructions);
                     mainText.setText(mainInstructions);
-
                     flags.put("gameDone", true);
                 }
             } else {
-                if (tS == 0) {
+                if(tS == 0) {
                     mainInstructions = "You've arrived at a village. The bells are ringing, and people are hurrying all around you.";
                     speak(mainInstructions);
-                    mainText.setText(mainInstructions);
-                    tS = 1;
+                    roomSpeech = "You're at the village";
+                    mainInstructions = "Resume exploring";
+                    tS = 2;
+                    if(fS == 2){fS = 1;}
+                    if(mS == 2){mS = 1;}
+                    if(bS == 2){bS = 1;}
                 }
             }
-            pauseMediaPlayer();
-            flags.put("visitTown", true);
+            flags.put("visitVillage", true);
         }
         // This sets the explore mode to false so that we can begin giving quests
-        if (flags.get("visitBeach") && flags.get("visitForest") && flags.get("visitMountain") && flags.get("visitTown")) {
+        if (flags.get("visitBeach") && flags.get("visitForest") && flags.get("visitMountain") && flags.get("visitVillage") && flags.get("exploreMode")) {
             flags.put("exploreMode", false);
+            if(!newSound.equals("village")){
+                speak("Return to the village");
+                mainInstructions = "Return to the village";
+                mainText.setText(mainInstructions);
+            }
         }
         TextView newText = (TextView) findViewById(R.id.roomName);
         // This could be removed, mainly used to make sure beacon switching is working.
@@ -512,8 +582,151 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         // Log.d("Beacon", "Nearest = " + places);
     }
 
+    protected void checkRoom(){
+        switch(newSound){
+            case "beach":
+                if (bS != 0) {
+                    roomSpeech = "You're at the beach";
+                    if (bS == 1) {
+                        speak(roomSpeech);
+                        bS = 2;
+                        if (fS == 0) {
+                        } else {
+                            fS = 1;
+                        }
+                        if (mS == 0) {
+                        } else {
+                            mS = 1;
+                        }
+                        if (tS == 0) {
+                        } else {
+                            tS = 1;
+                        }
+                    } else if (bS == 2) {
+                        if (fS == 0) {
+                        } else {
+                            fS = 1;
+                        }
+                        if (mS == 0) {
+                        } else {
+                            mS = 1;
+                        }
+                        if (tS == 0) {
+                        } else {
+                            tS = 1;
+                        }
+                    }
+                }
+                break;
+            case "forest":
+                if (fS != 0) {
+                    roomSpeech = "You're at the forest";
+                    if (fS == 1) {
+                        speak(roomSpeech);
+                        fS = 2;
+                        if (bS == 0) {
+                        } else {
+                            bS = 1;
+                        }
+                        if (mS == 0) {
+                        } else {
+                            mS = 1;
+                        }
+                        if (tS == 0) {
+                        } else {
+                            tS = 1;
+                        }
+                    } else if (fS == 2) {
+                        if (bS == 0) {
+                        } else {
+                            bS = 1;
+                        }
+                        if (mS == 0) {
+                        } else {
+                            mS = 1;
+                        }
+                        if (tS == 0) {
+                        } else {
+                            tS = 1;
+                        }
+                    }
+                }
+                break;
+            case "mountain":
+                if (mS != 0) {
+                    roomSpeech = "You're at the mountains";
+                    if (mS == 1) {
+                        speak(roomSpeech);
+                        mS = 2;
+                        if (fS == 0) {
+                        } else {
+                            fS = 1;
+                        }
+                        if (bS == 0) {
+                        } else {
+                            bS = 1;
+                        }
+                        if (tS == 0) {
+                        } else {
+                            tS = 1;
+                        }
+                    } else if (mS == 2) {
+                        if (fS == 0) {
+                        } else {
+                            fS = 1;
+                        }
+                        if (bS == 0) {
+                        } else {
+                            bS = 1;
+                        }
+                        if (tS == 0) {
+                        } else {
+                            tS = 1;
+                        }
+                    }
+                }
+                break;
+            case "village":
+                if (tS != 0) {
+                    roomSpeech = "You're at the village";
+                    if (tS == 1) {
+                        speak(roomSpeech);
+                        tS = 2;
+                        if (fS == 0) {
+                        } else {
+                            fS = 1;
+                        }
+                        if (mS == 0) {
+                        } else {
+                            mS = 1;
+                        }
+                        if (bS == 0) {
+                        } else {
+                            bS = 1;
+                        }
+                    } else if (tS == 2) {
+                        if (fS == 0) {
+                        } else {
+                            fS = 1;
+                        }
+                        if (mS == 0) {
+                        } else {
+                            mS = 1;
+                        }
+                        if (bS == 0) {
+                        } else {
+                            bS = 1;
+                        }
+                    }
+                }
+                break;
+        }
+        mainText.setText(mainInstructions);
+    }
+
     @Override
     public void onBackPressed() {
+        roomSound.release();
         finish();
         return;
     }

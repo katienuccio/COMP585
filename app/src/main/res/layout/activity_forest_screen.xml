@@ -37,13 +37,14 @@
 
     <TextView
         android:id="@+id/instructionsForest"
-        android:layout_width="336dp"
-        android:layout_height="87dp"
+        android:layout_width="313dp"
+        android:layout_height="88dp"
         android:layout_marginLeft="31dp"
         android:layout_marginTop="10dp"
         android:text="Instructions:"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        tools:layout_editor_absoluteY="385dp" />
 
     <TextView
         android:id="@+id/timeID"

@@ -130,6 +130,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
 
     @Override
     public void onError(int errorCode) {
+        Log.d("VOICE", getErrorText(errorCode));
         if (mResult != null) {
             myText.setText(mResult);
             if (mResult.equals("I have the power")) {
