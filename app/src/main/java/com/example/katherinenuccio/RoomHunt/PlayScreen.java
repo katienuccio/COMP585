@@ -271,7 +271,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 }
                                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                                     // Dialogue to tell player congratulations
-                                    mainInstructions = ("When you return to village, the village elder thanks you for all that you have done. Congratulations on slaying the mighty Yodelo!");
+                                    mainInstructions = ("When you return to the village, the village elder thanks you for all that you have done. Congratulations on slaying the mighty Yodelo!");
                                     speak(mainInstructions);
                                     mainText.setText(mainInstructions);
                                     flags.put("gameDone", true);
@@ -329,7 +329,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     }
 
                     // This sets the explore mode to false so that we can begin giving quests
-                    if (flags.get("visitBeach") && flags.get("visitForest") && flags.get("visitMountain") && flags.get("visitVillage") && flags.get("exploreMode")) {
+                    if (flags.get("visitBeach") && flags.get("visitForest") && flags.get("visitMountain") && flags.get("visitVillage") && flags.get("exploreModex")) {
                         flags.put("exploreMode", false);
                         if(!places.equals("town")){
                             speak("Return to the village");
