@@ -48,7 +48,7 @@ public class BeachScreen extends AppCompatActivity  {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    beachInstructions = ("You return to the beach. You're not sure where the sword may be hidden, so you just pick a spot and begin digging. Use your phone to dig for the sword.");
+                    beachInstructions = ("You're not sure where the sword may be hidden, so you just pick a spot and begin digging. Use your phone to dig for the sword.");
                     speak(beachInstructions);
                     beachText.setText(beachInstructions);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {

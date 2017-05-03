@@ -271,7 +271,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                                 }
                                 else if (flags.get("dragonDone") && !flags.get("gameDone")){
                                     // Dialogue to tell player congratulations
-                                    mainInstructions = ("When you return to village, the village elder thanks you for all that you have done. Congratulations on slaying the mighty Yodelo!");
+                                    mainInstructions = ("When you return to the village, the village elder thanks you for all that you have done. Congratulations on slaying the mighty Yodelo!");
                                     speak(mainInstructions);
                                     mainText.setText(mainInstructions);
                                     flags.put("gameDone", true);
@@ -398,7 +398,9 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         beaconManager.stopRanging(region);
 
         super.onPause();
-        roomSound.pause();
+        if(roomSound.isPlaying()) {
+            roomSound.pause();
+        }
     }
 
     public void onClick(View view) {

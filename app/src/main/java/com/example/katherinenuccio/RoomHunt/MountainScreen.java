@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -29,6 +30,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
     private HashMap<String, String> instructions;
     private boolean listening;
     private TextToSpeech tts;
+    private MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class MountainScreen extends Activity implements RecognitionListener {
         flags.put("dragonDone", true);
         instructions = new HashMap<String, String>();
         instructions.put("instructions", "Return to the village");
+        mp = new MediaPlayer().create(MountainScreen.this, R.raw.yodelo);
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -49,8 +52,8 @@ public class MountainScreen extends Activity implements RecognitionListener {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    returnedText.setText("You've arrived at Yodelo's lair. Tap the screen and shout the magic phrase to slay Yodelo. Remember, the phrase is 'I HAVE THE POWER'.");
-                    speak("You've arrived at Yodelo's lair. Tap the screen and shout the magic phrase to slay Yodelo. Remember, the phrase is 'I HAVE THE POWER'.");
+                    returnedText.setText("You've arrived at Yodelo's lair. Tap the screen and shout the magic phrase to slay Yodelo.");
+                    speak("You've arrived at Yodelo's lair. Tap the screen and shout the magic phrase to slay Yodelo.");
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }
@@ -134,8 +137,11 @@ public class MountainScreen extends Activity implements RecognitionListener {
         if (mResult != null) {
             myText.setText(mResult);
             if (mResult.equals("I have the power")) {
-                returnedText.setText("Congratulations! You have unlocked the sword.");
-                speak("Congratulations! You have unlocked the sword.");
+                speak("You did it!");
+                mp.start();
+                while(mp.isPlaying()){/*Do Nothing*/}
+                returnedText.setText("Congratulations! You have slain the dragon!");
+                speak("Congratulations! You have slain the dragon!");
                 beatBoss();
             } else {
                 returnedText.setText("Sorry, that's not the right phrase. Please try again.");
@@ -171,6 +177,9 @@ public class MountainScreen extends Activity implements RecognitionListener {
         if (results != null) {
             myText.setText(mResult);
             if (mResult.equals("I have the power")) {
+                speak("You did it!");
+                mp.start();
+                while(mp.isPlaying()){/*Do Nothing*/}
                 returnedText.setText("Congratulations! You have slain the dragon!");
                 speak("Congratulations! You have slain the dragon!");
                 beatBoss();

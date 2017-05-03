@@ -47,7 +47,7 @@ public class ForestScreen extends AppCompatActivity {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    String instructionsText = "You've returned to the Forest. You feel a mighty breeze shake the trees and tons of apples fall to the ground. Tap the screen to gather as many apples as you can, but hurry, we don't have much time before the animals get it. Tap to Begin!";
+                    String instructionsText = "You feel a mighty breeze shake the trees and tons of apples fall to the ground. Tap the screen to gather as many apples as you can, but hurry, we don't have much time before the animals get it. Tap to Begin!";
                     instructionText.setText(instructionsText);
                     speak(instructionsText);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
