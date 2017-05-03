@@ -329,7 +329,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
                     }
 
                     // This sets the explore mode to false so that we can begin giving quests
-                    if (flags.get("visitBeach") && flags.get("visitForest") && flags.get("visitMountain") && flags.get("visitVillage") && flags.get("exploreModex")) {
+                    if (flags.get("visitBeach") && flags.get("visitForest") && flags.get("visitMountain") && flags.get("visitVillage") && flags.get("exploreMode")) {
                         flags.put("exploreMode", false);
                         if(!places.equals("town")){
                             speak("Return to the village");
@@ -398,7 +398,9 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         beaconManager.stopRanging(region);
 
         super.onPause();
-        roomSound.pause();
+        if(roomSound.isPlaying()) {
+            roomSound.pause();
+        }
     }
 
     public void onClick(View view) {
