@@ -52,7 +52,7 @@
         android:layout_width="97dp"
         android:layout_height="48dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="60dp"
+        android:layout_marginLeft="92dp"
         android:layout_marginTop="35dp"
         android:background="@color/colorPrimary"
         android:text="BEACH"
@@ -65,7 +65,7 @@
         android:layout_height="48dp"
         android:layout_below="@+id/beach_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="60dp"
+        android:layout_marginLeft="92dp"
         android:layout_marginTop="16dp"
         android:background="@color/colorPrimary"
         android:text="FOREST"
@@ -80,7 +80,7 @@
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"
         android:text="MOUNTAIN"
-        android:layout_marginRight="98dp"
+        android:layout_marginRight="68dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="35dp" />
@@ -91,7 +91,7 @@
         android:layout_height="48dp"
         android:layout_below="@+id/mountain_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginRight="98dp"
+        android:layout_marginRight="68dp"
         android:layout_marginTop="16dp"
         android:background="@color/colorPrimary"
         android:text="VILLAGE"
@@ -100,8 +100,8 @@
 
     <TextView
         android:id="@+id/mainText"
-        android:layout_width="309dp"
-        android:layout_height="231dp"
+        android:layout_width="304dp"
+        android:layout_height="179dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="7dp"
         android:text="Instructions: "
@@ -118,6 +118,16 @@
         app:srcCompat="@android:drawable/ic_lock_silent_mode_off"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/skipButton"
+        android:layout_width="70dp"
+        android:layout_height="36dp"
+        android:text="Skip"
+        android:layout_marginLeft="32dp"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp" />
 

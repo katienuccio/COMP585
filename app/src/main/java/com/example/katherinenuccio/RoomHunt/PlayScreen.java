@@ -54,7 +54,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
     }
 
     // Cheat Buttons
-    private Button beachButton, mountainButton, forestButton, townButton;
+    private Button beachButton, mountainButton, forestButton, townButton, skipButton;
     private ImageButton instructionButton;
 
     // Variables to make beacons work
@@ -98,6 +98,8 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         townButton.setOnClickListener(this);
         instructionButton = (ImageButton) findViewById(R.id.speechButton);
         instructionButton.setOnClickListener(this);
+        skipButton = (Button) findViewById(R.id.skipButton);
+        skipButton.setOnClickListener(this);
 
         flags = new HashMap<String, Boolean>();
         instructions = new HashMap<String, String>();
@@ -150,7 +152,7 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
 
                     switch(places){
                         case "Cove":
-                            if (!flags.get("coveDone") && flags.get("appleDone")) {
+                            if (!flags.get("coveDone")) {
                                 // Go to dance party!
 
                                 Intent coveIntent = new Intent(PlayScreen.this, CoveScreen.class);
@@ -398,8 +400,10 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         beaconManager.stopRanging(region);
 
         super.onPause();
-        if(roomSound.isPlaying()) {
-            roomSound.pause();
+        if(roomSound != null) {
+            if (roomSound.isPlaying()) {
+                roomSound.pause();
+            }
         }
     }
 
@@ -407,6 +411,41 @@ public class PlayScreen extends AppCompatActivity implements View.OnClickListene
         view.playSoundEffect(SoundEffectConstants.CLICK);
         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         if (view == instructionButton) {speak(mainInstructions);}
+        if (view == skipButton) {
+            if(flags.get("exploreMode")){
+                flags.put("exploreMode", false);
+                flags.put("visitForest", true);
+                flags.put("visitBeach", true);
+                flags.put("visitMountain", true);
+                flags.put("visitVillage", true);
+                mainText.setText("Skipped Exploration, go to the Village.");
+                Log.d("SKIP", "SkipExplore");
+            } else if (!flags.get("applePicking")) {
+                flags.put("applePicking", true);
+                mainText.setText("Skipped receiving apple quest, go to the Forest");
+                Log.d("SKIP", "SkipAppleQ");
+            } else if (flags.get("applePicking") && !flags.get("appleDone")) {
+                flags.put("appleDone", true);
+                mainText.setText("Skipped apple minigame, go to the Village");
+                Log.d("SKIP", "SkipAppleMG");
+            } else if (!flags.get("duneDigging")) {
+                flags.put("duneDigging", true);
+                mainText.setText("Skipped receiving sword quest, go to the Beach");
+                Log.d("SKIP", "SkipSwordQ");
+            } else if (flags.get("duneDigging") && !flags.get("swordDone")) {
+                flags.put("swordDone", true);
+                mainText.setText("Skipped sword game, go to the Village");
+                Log.d("SKIP", "SkipSwordMG");
+            } else if (!flags.get("bossBeating")) {
+                flags.put("bossBeating", true);
+                mainText.setText("Skipped receiving dragon quest, go to the Mountains");
+                Log.d("SKIP", "SkipBossQ");
+            } else if (flags.get("bossBeating") && !flags.get("dragonDone")) {
+                flags.put("dragonDone", true);
+                mainText.setText("Skipped dragon game, go to the Village");
+                Log.d("SKIP", "SkipBossMG");
+            }
+        }
         if (view == beachButton) {
             newSound = "beach";
             pauseMediaPlayer();

@@ -52,8 +52,8 @@ public class MountainScreen extends Activity implements RecognitionListener {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = tts.setLanguage(Locale.US);
                     Log.e("TTS", "Initialization Succeeded");
-                    returnedText.setText("You've arrived at Yodelo's lair. Tap the screen and shout the magic phrase to slay Yodelo.");
-                    speak("You've arrived at Yodelo's lair. Tap the screen and shout the magic phrase to slay Yodelo.");
+                    returnedText.setText("You've arrived at Yodelo's lair. Tap the screen once and shout the magic phrase to slay Yodelo.");
+                    speak("You've arrived at Yodelo's lair. Tap the screen once and shout the magic phrase to slay Yodelo.");
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language Is Not Supported");
                     }

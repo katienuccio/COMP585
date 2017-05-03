@@ -114,9 +114,13 @@ public class CoveScreen extends AppCompatActivity  {
     }
 
     private void coveDone(){
-        coveSound.stop();
-        coveSound.reset();
-        coveSound.release();
+        if (coveSound != null) {
+            if (coveSound.isPlaying()) {
+                coveSound.stop();
+//                coveSound.reset();
+//                coveSound.release();
+            }
+        }
         Intent i = new Intent(this, PlayScreen.class);
         i.putExtra("flags", flags);
         i.putExtra("instructions", instructions);
